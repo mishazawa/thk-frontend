@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import "./App.css";
 
 import { Done } from "./pages/Done";
@@ -6,6 +6,9 @@ import { Message } from "./pages/Message";
 import { Mood } from "./pages/Mood";
 import { StartPage } from "./pages/Start";
 import { VisualVibe } from "./pages/VisualVibe";
+import { ModelProvider } from "./utils/ModelProvider";
+import { Loading } from "./utils/Loading";
+import { TextFilterProvider } from "./utils/TextFilterProvider";
 
 export type ProceedProps = {
   callback: () => void;
@@ -14,7 +17,7 @@ export type ProceedProps = {
 const SEQUENCE = ["Start", "VisualVibe", "Message", "Mood", "Done"] as const;
 
 function App() {
-  const [currentScreen, setScreen] = useState(0);
+  const [currentScreen, setScreen] = useState(2);
 
   function nextScreen() {
     setScreen(Math.min(currentScreen + 1, SEQUENCE.length - 1));
@@ -22,7 +25,13 @@ function App() {
 
   return (
     <>
-      <SelectScreen index={currentScreen} callback={nextScreen} />
+      <Suspense fallback={<Loading />}>
+        <ModelProvider>
+          <TextFilterProvider>
+            <SelectScreen index={currentScreen} callback={nextScreen} />
+          </TextFilterProvider>
+        </ModelProvider>
+      </Suspense>
     </>
   );
 }
