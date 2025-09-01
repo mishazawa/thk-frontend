@@ -1,0 +1,14 @@
+brew install ngrok
+ngrok config add-authtoken 2pn4Tty1F44wRr0RmViGmSBRqlh_5jquvMDMaBBdJ4isSBoL
+ngrok http http://localhost:6969
+
+--> Session Status                online                                                                                                                  
+Account                       รคɭคשค (Plan: Free)                                                                                                     
+Version                       3.27.0                                                                                                                  
+Region                        Asia Pacific (ap)                                                                                                       
+Latency                       50ms                                                                                                                    
+Web Interface                 http://127.0.0.1:4040                                                                                                   
+Forwarding                    https://5aba609d149d.ngrok-free.app -> http://localhost:6969    
+
+
+https://5aba609d149d.ngrok-free.app --> server_test.html/config.server
