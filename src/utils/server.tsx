@@ -2,7 +2,7 @@ import { createContext, useContext, type ReactNode } from "react";
 import { useStore } from "./Store";
 
 export function useServerCommunication() {
-  const { set: _, ...data } = useStore();
+  const { set: _, currentScreen: _1, back: _2, next: _3, ...data } = useStore();
 
   async function sendStart() {
     return Promise.resolve();
@@ -53,7 +53,7 @@ export function useCommunicator() {
 }
 
 async function POST(data: any) {
-  console.log(import.meta.env.VITE_SERVER);
+  console.log(data);
   const res = await fetch(import.meta.env.VITE_SERVER, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

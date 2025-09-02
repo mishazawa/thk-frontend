@@ -34,6 +34,8 @@ function createModelResource() {
   );
   return {
     read() {
+      if (import.meta.env.VITE_SKIP_TF_MODEL)
+        return { classify: (..._args: any) => [] };
       if (status === "pending") throw suspender;
       if (status === "error") throw result;
       return result;

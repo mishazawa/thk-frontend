@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { SEQUENCE } from "../App";
+import { SEQUENCE, START_SCREEN } from "../constants";
 
 type ServerData = {
   text: string;
@@ -28,7 +28,12 @@ export const useStore = create<
   style: [0.5, 0.5],
   set: <K extends keyof ServerData>(step: K, value: ServerData[K]) =>
     set(() => ({ [step]: value })),
-  currentScreen: 0,
+  //
+  //
+  // ............
+  //
+  //
+  currentScreen: START_SCREEN,
   next: () =>
     set((s) => ({
       currentScreen: Math.min(s.currentScreen + 1, SEQUENCE.length - 1),

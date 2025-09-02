@@ -5,20 +5,13 @@ import { Done } from "./pages/Done";
 import { Message } from "./pages/Message";
 import { Mood } from "./pages/Mood";
 import { StartPage } from "./pages/Start";
-import { VisualVibe } from "./pages/VisualVibe";
+import { VisualVibe } from "./pages/Style";
 import { ModelProvider } from "./utils/ModelProvider";
 import { Loading } from "./utils/Loading";
 import { TextFilterProvider } from "./utils/TextFilterProvider";
 import { CommunicatorProvider } from "./utils/server";
 import { useStore } from "./utils/Store";
-
-export const SEQUENCE = [
-  "Start",
-  "VisualVibe",
-  "Message",
-  "Mood",
-  "Done",
-] as const;
+import { SEQUENCE } from "./constants";
 
 function App() {
   return (
