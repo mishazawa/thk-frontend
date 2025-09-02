@@ -1,9 +1,17 @@
-import type { ProceedProps } from "../App";
+import { useCommunicator } from "../utils/server";
+import { useStore } from "../utils/Store";
 
-export function StartPage({ callback }: ProceedProps) {
+export function StartPage() {
+  const { sendStart } = useCommunicator();
+  const { next } = useStore();
+  function proceed() {
+    sendStart()
+      .then(() => next())
+      .catch((err) => alert(err));
+  }
   return (
     <>
-      <button onClick={callback}>Start</button>
+      <button onClick={proceed}>Start</button>
     </>
   );
 }

@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import type { ProceedProps } from "../App";
+import { useStore } from "../utils/Store";
 
-export function VisualVibe({ callback }: ProceedProps) {
+export function VisualVibe() {
+  const { next } = useStore();
+
   return (
     <>
       <p>What do you love about nature the most</p>
       <CoordsPicker />
-      <button onClick={callback}>Proceed</button>
+      <button onClick={() => next()}>Proceed</button>
     </>
   );
 }
