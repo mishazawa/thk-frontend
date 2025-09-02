@@ -22,6 +22,7 @@ export function Mood() {
         value={dynamics}
         onChange={(e) => set("dynamics", +e.target.value)}
       />
+      <br />
       <button onClick={send}>Send</button>
     </>
   );
