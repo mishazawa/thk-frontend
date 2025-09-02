@@ -1,0 +1,10 @@
+POST http://localhost:6969/
+Content-Type: application/json
+
+{
+  "text": "Hello, World!",
+  "style": [0.9, 0.05, 0.025, 0.025],
+  "dynamics": 1443.543
+}
+
+###
