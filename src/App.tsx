@@ -1,4 +1,4 @@
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 import "./App.css";
 
 import { Done } from "./pages/Done";
@@ -9,50 +9,46 @@ import { VisualVibe } from "./pages/VisualVibe";
 import { ModelProvider } from "./utils/ModelProvider";
 import { Loading } from "./utils/Loading";
 import { TextFilterProvider } from "./utils/TextFilterProvider";
+import { CommunicatorProvider } from "./utils/server";
+import { useStore } from "./utils/Store";
 
-export type ProceedProps = {
-  callback: () => void;
-};
-
-const SEQUENCE = ["Start", "VisualVibe", "Message", "Mood", "Done"] as const;
+export const SEQUENCE = [
+  "Start",
+  "VisualVibe",
+  "Message",
+  "Mood",
+  "Done",
+] as const;
 
 function App() {
-  const [currentScreen, setScreen] = useState(2);
-
-  function nextScreen() {
-    setScreen(Math.min(currentScreen + 1, SEQUENCE.length - 1));
-  }
-
   return (
     <>
       <Suspense fallback={<Loading />}>
-        <ModelProvider>
-          <TextFilterProvider>
-            <SelectScreen index={currentScreen} callback={nextScreen} />
-          </TextFilterProvider>
-        </ModelProvider>
+        <CommunicatorProvider>
+          <ModelProvider>
+            <TextFilterProvider>
+              <SelectScreen />
+            </TextFilterProvider>
+          </ModelProvider>
+        </CommunicatorProvider>
       </Suspense>
     </>
   );
 }
 
-function SelectScreen({
-  index,
-  ...props
-}: {
-  index: number;
-} & ProceedProps) {
-  const screenName = SEQUENCE[index];
+function SelectScreen() {
+  const { currentScreen } = useStore();
+  const screenName = SEQUENCE[currentScreen];
   if (!screenName) return <>Err</>;
   switch (screenName) {
     case "Start":
-      return <StartPage {...props} />;
+      return <StartPage />;
     case "VisualVibe":
-      return <VisualVibe {...props} />;
+      return <VisualVibe />;
     case "Message":
-      return <Message {...props} />;
+      return <Message />;
     case "Mood":
-      return <Mood {...props} />;
+      return <Mood />;
     case "Done":
       return <Done />;
   }
