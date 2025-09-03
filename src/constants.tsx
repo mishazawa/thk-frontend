@@ -1,4 +1,4 @@
-export const START_SCREEN = 1;
+export const START_SCREEN = 0;
 export const SEQUENCE = [
   "Start",
   "VisualVibe",
