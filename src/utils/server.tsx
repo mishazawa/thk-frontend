@@ -13,6 +13,10 @@ export function useServerCommunication() {
       const { status } = await POST(data);
       return Promise.resolve(status);
     } catch (e) {
+      if (import.meta.env.DEV) {
+        console.error(e);
+        return Promise.resolve(e);
+      }
       return Promise.reject(e);
     }
   }

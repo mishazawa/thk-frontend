@@ -3,6 +3,9 @@ import { isToxic } from "../utils";
 import { useTextFilter } from "../utils/TextFilterProvider";
 import { useStore } from "../utils/Store";
 import { Word } from "../dictionary";
+import { CustomButton } from "./components/Buttons";
+import { LargeText } from "./components/Text";
+import { Page } from "./components/Container";
 
 export function Message() {
   const model = useModel();
@@ -21,13 +24,19 @@ export function Message() {
   }
 
   return (
-    <>
-      <p>
+    <Page>
+      <LargeText>
         <Word t="MESSAGE" />
-      </p>
-      <input value={text} onChange={(e) => set("text", e.target.value)}></input>
+      </LargeText>
+      <input
+        className="input_rounded w-100"
+        value={text}
+        onChange={(e) => set("text", e.target.value)}
+      ></input>
       <br />
-      <button onClick={submit}>Done</button>
-    </>
+      <CustomButton onClick={submit}>
+        <Word t="DONE" />
+      </CustomButton>
+    </Page>
   );
 }

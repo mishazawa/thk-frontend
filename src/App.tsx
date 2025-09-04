@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import "./App.css";
 
 import { Done } from "./pages/Done";
 import { Message } from "./pages/Message";

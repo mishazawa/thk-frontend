@@ -12,9 +12,11 @@ export function StartPage() {
   }
   return (
     <>
-      <button onClick={proceed}>
-        <Word t="START" />
-      </button>
+      <div className="container-fluid d-flex flex-grow-1 align-items-center justify-content-center">
+        <button className="btn btn_start fs-1 text-uppercase" onClick={proceed}>
+          <Word t="START" />
+        </button>
+      </div>
     </>
   );
 }

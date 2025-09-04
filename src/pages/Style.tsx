@@ -2,17 +2,19 @@ import { useEffect, useRef, useState } from "react";
 import { useStore } from "../utils/Store";
 import { CIRCLE_RADIUS } from "../constants";
 import { Word } from "../dictionary";
-import { DoneButton } from "./Buttons";
+import { DoneButton } from "./components/Buttons";
+import { LargeText } from "./components/Text";
+import { Page } from "./components/Container";
 
 export function VisualVibe() {
   return (
-    <>
-      <p>
+    <Page>
+      <LargeText>
         <Word t="QUESTION" />
-      </p>
+      </LargeText>
       <CoordsPicker />
       <DoneButton />
-    </>
+    </Page>
   );
 }
 
@@ -67,14 +69,9 @@ function CoordsPicker() {
       ctx.scale(dpr, dpr);
 
       ctx.clearRect(0, 0, size.w, size.h);
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, size.w, size.h);
 
-      // Border
-      ctx.strokeStyle = "#eeeeee"; // gray-300
-      ctx.strokeRect(0.5, 0.5, size.w - 1, size.h - 1);
-
-      ctx.strokeStyle = "#eeeeee"; // gray-400
+      // axes
+      ctx.strokeStyle = "#eeeeee";
       ctx.beginPath();
       ctx.moveTo(0, Math.floor(size.h / 2) + 0.5);
       ctx.lineTo(size.w, Math.floor(size.h / 2) + 0.5);
@@ -82,11 +79,15 @@ function CoordsPicker() {
       ctx.lineTo(Math.floor(size.w / 2) + 0.5, size.h);
       ctx.stroke();
 
+      // picker
       if (point) {
-        ctx.fillStyle = "#333333"; // gray-900
+        ctx.strokeStyle = "#ffffff";
+
+        ctx.fillStyle = "#ffffff33";
         ctx.beginPath();
         ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
         ctx.fill();
+        ctx.stroke();
       }
 
       frameId = requestAnimationFrame(render);
@@ -160,7 +161,7 @@ function CoordsPicker() {
   }
 
   return (
-    <div ref={containerRef}>
+    <div ref={containerRef} className="block w-100">
       <canvas
         ref={canvasRef}
         width={size.w}
@@ -173,7 +174,6 @@ function CoordsPicker() {
         onTouchMove={onMouseMove}
         onTouchEnd={onMouseUp}
         onTouchCancel={onMouseLeave}
-        className="block w-full h-auto cursor-crosshair"
       />
     </div>
   );

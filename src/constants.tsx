@@ -7,4 +7,4 @@ export const SEQUENCE = [
   "Done",
 ] as const;
 
-export const CIRCLE_RADIUS = 8;
+export const CIRCLE_RADIUS = 40;

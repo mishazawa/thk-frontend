@@ -1,13 +1,15 @@
 import { Word } from "../dictionary";
-import { BackButton } from "./Buttons";
+import { BackButton } from "./components/Buttons";
+import { Page } from "./components/Container";
+import { LargeText } from "./components/Text";
 
 export function Done() {
   return (
-    <>
-      <p>
+    <Page>
+      <LargeText>
         <Word t="SEND_SUCCESS" />
-      </p>
+      </LargeText>
       <BackButton />
-    </>
+    </Page>
   );
 }
