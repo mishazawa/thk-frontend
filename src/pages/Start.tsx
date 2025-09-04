@@ -1,3 +1,4 @@
+import { Word } from "../dictionary";
 import { useCommunicator } from "../utils/server";
 import { useStore } from "../utils/Store";
 
@@ -11,7 +12,9 @@ export function StartPage() {
   }
   return (
     <>
-      <button onClick={proceed}>Start</button>
+      <button onClick={proceed}>
+        <Word t="START" />
+      </button>
     </>
   );
 }

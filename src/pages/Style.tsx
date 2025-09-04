@@ -1,15 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { useStore } from "../utils/Store";
 import { CIRCLE_RADIUS } from "../constants";
+import { Word } from "../dictionary";
+import { DoneButton } from "./Buttons";
 
 export function VisualVibe() {
-  const { next } = useStore();
-
   return (
     <>
-      <p>What do you love about nature the most</p>
+      <p>
+        <Word t="QUESTION" />
+      </p>
       <CoordsPicker />
-      <button onClick={() => next()}>Proceed</button>
+      <DoneButton />
     </>
   );
 }

@@ -1,19 +1,15 @@
-import { useCommunicator } from "../utils/server";
+import { Word } from "../dictionary";
 import { useStore } from "../utils/Store";
+import { SendButton } from "./Buttons";
 
 export function Mood() {
-  const { set, dynamics, next } = useStore();
-  const { sendData } = useCommunicator();
-
-  function send() {
-    sendData()
-      .then(() => next())
-      .catch((err) => alert(err));
-  }
+  const { set, dynamics } = useStore();
 
   return (
     <>
-      <p>Mood</p>
+      <p>
+        <Word t="MOOD" />
+      </p>
       <input
         min={0}
         max={1}
@@ -23,7 +19,7 @@ export function Mood() {
         onChange={(e) => set("dynamics", +e.target.value)}
       />
       <br />
-      <button onClick={send}>Send</button>
+      <SendButton />
     </>
   );
 }

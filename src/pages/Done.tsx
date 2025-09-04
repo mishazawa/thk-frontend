@@ -1,11 +1,13 @@
-import { useStore } from "../utils/Store";
+import { Word } from "../dictionary";
+import { BackButton } from "./Buttons";
 
 export function Done() {
-  const { back } = useStore();
   return (
     <>
-      <p>Done</p>
-      <button onClick={back}>Another message</button>
+      <p>
+        <Word t="SEND_SUCCESS" />
+      </p>
+      <BackButton />
     </>
   );
 }
