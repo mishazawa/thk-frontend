@@ -93,22 +93,42 @@ function CoordsPicker() {
     return () => cancelAnimationFrame(frameId);
   }, [size, dpr, point]);
 
-  const toLocal = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  function toLocal(
+    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
+  ) {
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = Math.round(e.clientX - rect.left);
-    const y = Math.round(e.clientY - rect.top);
+
+    let clientX: number, clientY: number;
+
+    if ("touches" in e) {
+      // TouchEvent
+      const touch = e.touches[0] || e.changedTouches[0];
+      clientX = touch.clientX;
+      clientY = touch.clientY;
+    } else {
+      // MouseEvent
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+
+    const x = Math.round(clientX - rect.left);
+    const y = Math.round(clientY - rect.top);
     return {
       x: Math.max(0, Math.min(size.w, x)),
       y: Math.max(0, Math.min(size.h, y)),
     };
-  };
+  }
 
-  const onMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const onMouseDown = (
+    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
+  ) => {
     setPoint(toLocal(e));
     setDragging(true);
   };
 
-  const onMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const onMouseMove = (
+    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
+  ) => {
     const pos = toLocal(e);
     if (dragging) {
       setPoint(pos);
@@ -147,6 +167,10 @@ function CoordsPicker() {
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseLeave}
+        onTouchStart={onMouseDown}
+        onTouchMove={onMouseMove}
+        onTouchEnd={onMouseUp}
+        onTouchCancel={onMouseLeave}
         className="block w-full h-auto cursor-crosshair"
       />
     </div>
