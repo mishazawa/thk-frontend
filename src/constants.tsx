@@ -1,4 +1,4 @@
-export const START_SCREEN = 1;
+export const START_SCREEN = 0;
 export const SEQUENCE = [
   "Start",
   "VisualVibe",
@@ -7,4 +7,4 @@ export const SEQUENCE = [
   "Done",
 ] as const;
 
-export const CIRCLE_RADIUS = 8;
+export const CIRCLE_RADIUS = 40;

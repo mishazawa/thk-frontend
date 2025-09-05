@@ -1,16 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 import { useStore } from "../utils/Store";
 import { CIRCLE_RADIUS } from "../constants";
+import { Word } from "../dictionary";
+import { DoneButton } from "./components/Buttons";
+import { LargeText } from "./components/Text";
+import { Page } from "./components/Container";
 
 export function VisualVibe() {
-  const { next } = useStore();
-
   return (
-    <>
-      <p>What do you love about nature the most</p>
+    <Page>
+      <LargeText>
+        <Word t="QUESTION" />
+      </LargeText>
       <CoordsPicker />
-      <button onClick={() => next()}>Proceed</button>
-    </>
+      <DoneButton />
+    </Page>
   );
 }
 
@@ -65,14 +69,9 @@ function CoordsPicker() {
       ctx.scale(dpr, dpr);
 
       ctx.clearRect(0, 0, size.w, size.h);
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, size.w, size.h);
 
-      // Border
-      ctx.strokeStyle = "#eeeeee"; // gray-300
-      ctx.strokeRect(0.5, 0.5, size.w - 1, size.h - 1);
-
-      ctx.strokeStyle = "#eeeeee"; // gray-400
+      // axes
+      ctx.strokeStyle = "#eeeeee";
       ctx.beginPath();
       ctx.moveTo(0, Math.floor(size.h / 2) + 0.5);
       ctx.lineTo(size.w, Math.floor(size.h / 2) + 0.5);
@@ -80,11 +79,15 @@ function CoordsPicker() {
       ctx.lineTo(Math.floor(size.w / 2) + 0.5, size.h);
       ctx.stroke();
 
+      // picker
       if (point) {
-        ctx.fillStyle = "#333333"; // gray-900
+        ctx.strokeStyle = "#ffffff";
+
+        ctx.fillStyle = "#ffffff33";
         ctx.beginPath();
         ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
         ctx.fill();
+        ctx.stroke();
       }
 
       frameId = requestAnimationFrame(render);
@@ -93,22 +96,42 @@ function CoordsPicker() {
     return () => cancelAnimationFrame(frameId);
   }, [size, dpr, point]);
 
-  const toLocal = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  function toLocal(
+    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
+  ) {
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = Math.round(e.clientX - rect.left);
-    const y = Math.round(e.clientY - rect.top);
+
+    let clientX: number, clientY: number;
+
+    if ("touches" in e) {
+      // TouchEvent
+      const touch = e.touches[0] || e.changedTouches[0];
+      clientX = touch.clientX;
+      clientY = touch.clientY;
+    } else {
+      // MouseEvent
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+
+    const x = Math.round(clientX - rect.left);
+    const y = Math.round(clientY - rect.top);
     return {
       x: Math.max(0, Math.min(size.w, x)),
       y: Math.max(0, Math.min(size.h, y)),
     };
-  };
+  }
 
-  const onMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const onMouseDown = (
+    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
+  ) => {
     setPoint(toLocal(e));
     setDragging(true);
   };
 
-  const onMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const onMouseMove = (
+    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
+  ) => {
     const pos = toLocal(e);
     if (dragging) {
       setPoint(pos);
@@ -138,7 +161,7 @@ function CoordsPicker() {
   }
 
   return (
-    <div ref={containerRef}>
+    <div ref={containerRef} className="block w-100">
       <canvas
         ref={canvasRef}
         width={size.w}
@@ -147,7 +170,10 @@ function CoordsPicker() {
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseLeave}
-        className="block w-full h-auto cursor-crosshair"
+        onTouchStart={onMouseDown}
+        onTouchMove={onMouseMove}
+        onTouchEnd={onMouseUp}
+        onTouchCancel={onMouseLeave}
       />
     </div>
   );

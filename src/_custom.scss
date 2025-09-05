@@ -1,0 +1,61 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.btn {
+  background-color: $blue-800;
+  border-color: $blue-300;
+  letter-spacing: 0.2rem;
+  &_start {
+    width: 10rem;
+    height: 10rem;
+    border-radius: 100%;
+  }
+
+  &_rounded {
+    background-color: $gray-800;
+    border-color: $gray-300;
+    border-radius: 1rem;
+  }
+
+  &_large {
+    padding: 1rem 3rem;
+  }
+}
+
+.mfs {
+  &_1 {
+    font-size: 3rem;
+  }
+}
+
+.input {
+  &_rounded {
+    font-size: 2rem;
+    padding: 1rem;
+    outline: none !important;
+    box-shadow: none !important;
+    background-color: $gray-800;
+    border: 1px solid $gray-300;
+    border-radius: 1rem;
+  }
+}
+
+.vertical-range-rotate {
+  writing-mode: vertical-lr;
+  direction: rtl;
+  appearance: slider-vertical;
+  width: 16px;
+  vertical-align: bottom;
+}
+
+.mood_container {
+  max-height: 70vh;
+}
+.canvas_MOCK {
+  flex: 0 0 90%;
+  height: 70vh;
+  background-color: red;
+}

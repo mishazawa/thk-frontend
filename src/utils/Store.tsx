@@ -20,23 +20,22 @@ type ServerDataSetter = {
   set: <K extends keyof ServerData>(step: K, value: ServerData[K]) => void;
 };
 
-export const useStore = create<
-  ServerData & ServerDataSetter & ScreenData & ScreenSetter
->((set) => ({
+const INITIAL_STATE: ServerData & ScreenData = {
   text: "",
   dynamics: 0,
   style: [0.5, 0.5],
+  currentScreen: START_SCREEN,
+};
+
+export const useStore = create<
+  ServerData & ServerDataSetter & ScreenData & ScreenSetter
+>((set) => ({
   set: <K extends keyof ServerData>(step: K, value: ServerData[K]) =>
     set(() => ({ [step]: value })),
-  //
-  //
-  // ............
-  //
-  //
-  currentScreen: START_SCREEN,
   next: () =>
     set((s) => ({
       currentScreen: Math.min(s.currentScreen + 1, SEQUENCE.length - 1),
     })),
-  back: () => set({ currentScreen: 0 }),
+  back: () => set(INITIAL_STATE),
+  ...INITIAL_STATE,
 }));
