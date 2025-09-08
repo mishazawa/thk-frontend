@@ -20,6 +20,13 @@ type ServerDataSetter = {
   set: <K extends keyof ServerData>(step: K, value: ServerData[K]) => void;
 };
 
+type LoaderData = {
+  isLoading: boolean;
+};
+type LoaderDataSetter = {
+  setLoading: (isLoading: boolean) => void;
+};
+
 const INITIAL_STATE: ServerData & ScreenData = {
   text: "",
   dynamics: 0,
@@ -38,4 +45,9 @@ export const useStore = create<
     })),
   back: () => set(INITIAL_STATE),
   ...INITIAL_STATE,
+}));
+
+export const useLoader = create<LoaderData & LoaderDataSetter>((set) => ({
+  isLoading: false,
+  setLoading: (isLoading: boolean) => set(() => ({ isLoading })),
 }));
