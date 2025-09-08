@@ -22,6 +22,7 @@ export function useModel() {
 function createModelResource() {
   let status = "pending";
   let result: any;
+
   let suspender = load(THRESHOLD, LABELS).then(
     (r) => {
       status = "success";
@@ -32,6 +33,7 @@ function createModelResource() {
       result = e;
     }
   );
+
   return {
     read() {
       if (!!import.meta.env.VITE_SKIP_TF_MODEL)
@@ -42,7 +44,6 @@ function createModelResource() {
     },
   };
 }
-
 const modelResource = createModelResource();
 
 export function ModelProvider({ children }: { children: ReactNode }) {

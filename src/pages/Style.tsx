@@ -20,14 +20,21 @@ export function VisualVibe() {
 }
 
 function CoordsPicker() {
+  const { set, style } = useStore();
+
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const englRef = useRef<any>(null);
   const pipeRef = useRef<any>(null);
 
+
   const [size, setSize] = useState<{ w: number; h: number }>({ w: 560, h: 360 });
-  const [point, setPoint] = useState<{ x: number; y: number } | null>(null);
-  const { set } = useStore();
+
+  const [point, setPoint] = useState<{ x: number; y: number } | null>({
+    x: style[0] * size.w,
+    y: style[1] * size.h,
+  });
+
   const [dragging, setDragging] = useState(false);
 
   const radius = CIRCLE_RADIUS;
@@ -40,6 +47,10 @@ function CoordsPicker() {
       const w = Math.max(280, Math.round(rect.width));
       const h = Math.max(220, Math.round(rect.width * 0.64));
       setSize({ w, h });
+      setPoint({
+        x: style[0] * w,
+        y: style[1] * h,
+      });
     };
     resize();
     const ro = new ResizeObserver(resize);

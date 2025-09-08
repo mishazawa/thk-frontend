@@ -1,8 +1,9 @@
 import { createContext, useContext, type ReactNode } from "react";
-import { useStore } from "./Store";
+import { useLoader, useStore } from "./Store";
 
 export function useServerCommunication() {
   const { set: _, currentScreen: _1, back: _2, next: _3, ...data } = useStore();
+  const { setLoading } = useLoader();
 
   async function sendStart() {
     return Promise.resolve();
@@ -10,6 +11,7 @@ export function useServerCommunication() {
 
   async function sendData() {
     try {
+      setLoading(true);
       const { status } = await POST(data);
       return Promise.resolve(status);
     } catch (e) {
@@ -18,6 +20,8 @@ export function useServerCommunication() {
         return Promise.resolve(e);
       }
       return Promise.reject(e);
+    } finally {
+      setLoading(false);
     }
   }
 

@@ -6,7 +6,7 @@ import { Mood } from "./pages/Mood";
 import { StartPage } from "./pages/Start";
 import { VisualVibe } from "./pages/Style";
 import { ModelProvider } from "./utils/ModelProvider";
-import { Loading } from "./utils/Loading";
+import { Loading, Loader } from "./pages/components/Loader";
 import { TextFilterProvider } from "./utils/TextFilterProvider";
 import { CommunicatorProvider } from "./utils/server";
 import { useStore } from "./utils/Store";
@@ -14,17 +14,17 @@ import { SEQUENCE } from "./constants";
 
 function App() {
   return (
-    <>
-      <Suspense fallback={<Loading />}>
-        <CommunicatorProvider>
-          <ModelProvider>
-            <TextFilterProvider>
-              <SelectScreen />
-            </TextFilterProvider>
-          </ModelProvider>
-        </CommunicatorProvider>
-      </Suspense>
-    </>
+    <Suspense fallback={<Loading />}>
+      <CommunicatorProvider>
+        <ModelProvider>
+          <TextFilterProvider>
+            <SelectScreen />
+          </TextFilterProvider>
+        </ModelProvider>
+      </CommunicatorProvider>
+
+      <Loader />
+    </Suspense>
   );
 }
 
