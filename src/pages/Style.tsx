@@ -5,6 +5,7 @@ import { Word } from "../dictionary";
 import { DoneButton } from "./components/Buttons";
 import { LargeText } from "./components/Text";
 import { Page } from "./components/Container";
+import { EnglCanvas } from "./components/EnglCanvas";
 
 export function VisualVibe() {
   return (
@@ -23,15 +24,17 @@ function CoordsPicker() {
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [size, setSize] = useState<{ w: number; h: number }>({
-    w: 560,
-    h: 360,
-  });
+  const englRef = useRef<any>(null);
+  const pipeRef = useRef<any>(null);
+
+
+  const [size, setSize] = useState<{ w: number; h: number }>({ w: 560, h: 360 });
 
   const [point, setPoint] = useState<{ x: number; y: number } | null>({
     x: style[0] * size.w,
     y: style[1] * size.h,
   });
+
   const [dragging, setDragging] = useState(false);
 
   const radius = CIRCLE_RADIUS;
@@ -39,7 +42,6 @@ function CoordsPicker() {
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-
     const resize = () => {
       const rect = el.getBoundingClientRect();
       const w = Math.max(280, Math.round(rect.width));
@@ -50,7 +52,6 @@ function CoordsPicker() {
         y: style[1] * h,
       });
     };
-
     resize();
     const ro = new ResizeObserver(resize);
     ro.observe(el);
@@ -59,7 +60,6 @@ function CoordsPicker() {
 
   const dpr = Math.max(1, Math.floor(window.devicePixelRatio || 1));
 
-  // ok for now
   useEffect(() => {
     let frameId: number;
     const canvas = canvasRef.current;
@@ -73,7 +73,7 @@ function CoordsPicker() {
       canvas.style.width = `${size.w}px`;
       canvas.style.height = `${size.h}px`;
 
-      ctx.setTransform(1, 0, 0, 1, 0, 0); // reset
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.scale(dpr, dpr);
 
       ctx.clearRect(0, 0, size.w, size.h);
@@ -87,10 +87,8 @@ function CoordsPicker() {
       ctx.lineTo(Math.floor(size.w / 2) + 0.5, size.h);
       ctx.stroke();
 
-      // picker
       if (point) {
         ctx.strokeStyle = "#ffffff";
-
         ctx.fillStyle = "#ffffff33";
         ctx.beginPath();
         ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
@@ -108,80 +106,82 @@ function CoordsPicker() {
     e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
   ) {
     const rect = e.currentTarget.getBoundingClientRect();
-
     let clientX: number, clientY: number;
-
     if ("touches" in e) {
-      // TouchEvent
       const touch = e.touches[0] || e.changedTouches[0];
       clientX = touch.clientX;
       clientY = touch.clientY;
     } else {
-      // MouseEvent
-      clientX = e.clientX;
-      clientY = e.clientY;
+      clientX = (e as React.MouseEvent).clientX;
+      clientY = (e as React.MouseEvent).clientY;
     }
-
     const x = Math.round(clientX - rect.left);
     const y = Math.round(clientY - rect.top);
-    return {
-      x: Math.max(0, Math.min(size.w, x)),
-      y: Math.max(0, Math.min(size.h, y)),
-    };
+    return { x: Math.max(0, Math.min(size.w, x)), y: Math.max(0, Math.min(size.h, y)) };
   }
 
-  const onMouseDown = (
-    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
-  ) => {
-    setPoint(toLocal(e));
+  const updateNormalized = (px: number, py: number) => {
+    const nx = px / size.w;
+    const ny = py / size.h;
+    set("style", [nx, ny] as [number, number]);
+
+    if (pipeRef.current && englRef.current) {
+      pipeRef.current.update({ u_xy: [nx, ny] }, false);
+      englRef.current.blit(pipeRef.current.pipe.get("out").tex);
+    }
+  };
+
+  const onDown = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+    const p = toLocal(e);
+    setPoint(p);
     setDragging(true);
+    updateNormalized(p.x, p.y);
   };
 
-  const onMouseMove = (
-    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
-  ) => {
-    const pos = toLocal(e);
-    if (dragging) {
-      setPoint(pos);
-    }
+  const onMove = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+    if (!dragging) return;
+    const p = toLocal(e);
+    setPoint(p);
+    updateNormalized(p.x, p.y);
   };
 
-  const onMouseUp = () => {
+  const onUpOrLeave = () => {
     setDragging(false);
-    if (point) {
-      set("style", toNormalized(point.x, point.y, canvasRef.current!));
-    }
+    if (point) updateNormalized(point.x, point.y);
   };
-
-  const onMouseLeave = () => {
-    setDragging(false);
-    if (point) {
-      set("style", toNormalized(point.x, point.y, canvasRef.current!));
-    }
-  };
-
-  function toNormalized(
-    x: number,
-    y: number,
-    canvas: HTMLCanvasElement
-  ): [number, number] {
-    return [x / canvas.width, y / canvas.height];
-  }
 
   return (
-    <div ref={containerRef} className="block w-100">
+    <div ref={containerRef} className="block w-100" style={{ position: "relative" }}>
+      {/* BACKGROUND */}
+      <EnglCanvas
+        mountRef={containerRef}
+        onReady={(engl, pipe) => {
+          englRef.current = engl;
+          pipeRef.current = pipe;
+        }}
+      />
+
+      {/* FOREGROUND */}
       <canvas
         ref={canvasRef}
         width={size.w}
         height={size.h}
-        onMouseDown={onMouseDown}
-        onMouseMove={onMouseMove}
-        onMouseUp={onMouseUp}
-        onMouseLeave={onMouseLeave}
-        onTouchStart={onMouseDown}
-        onTouchMove={onMouseMove}
-        onTouchEnd={onMouseUp}
-        onTouchCancel={onMouseLeave}
+        onMouseDown={onDown}
+        onMouseMove={onMove}
+        onMouseUp={onUpOrLeave}
+        onMouseLeave={onUpOrLeave}
+        onTouchStart={onDown}
+        onTouchMove={onMove}
+        onTouchEnd={onUpOrLeave}
+        onTouchCancel={onUpOrLeave}
+        style={{
+          position: "relative",
+          zIndex: 1,
+          display: "block",
+          width: `${size.w}px`,
+          height: `${size.h}px`,
+          touchAction: "none",
+        }}
       />
     </div>
   );

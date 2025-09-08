@@ -5,7 +5,8 @@ export const MOOD = "How do you feel?";
 export const DONE = "Done";
 export const SEND = "Send";
 export const ANOTHER_MESSAGE = "Another message";
-export const SEND_SUCCESS = "Your message has been sent";
+export const SEND_SUCCESS = "Your message has been displayed";
+export const WAITING_FOR_SERVER = "Message is being displayed";
 
 const DICT = {
   START,
@@ -16,6 +17,7 @@ const DICT = {
   SEND,
   ANOTHER_MESSAGE,
   SEND_SUCCESS,
+  WAITING_FOR_SERVER
 } as const;
 
 export function Word<K extends keyof typeof DICT>({ t }: { t: K }) {
