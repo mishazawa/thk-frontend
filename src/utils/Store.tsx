@@ -29,7 +29,7 @@ type LoaderDataSetter = {
 
 const INITIAL_STATE: ServerData & ScreenData = {
   text: "",
-  dynamics: 0,
+  dynamics: 0.5,
   style: [0.5, 0.5],
   currentScreen: START_SCREEN,
 };
