@@ -22,13 +22,15 @@ export function VisualVibe() {
 function CoordsPicker() {
   const { set, style } = useStore();
 
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null!);
+  const canvasRef = useRef<HTMLCanvasElement>(null!);
   const englRef = useRef<any>(null);
   const pipeRef = useRef<any>(null);
 
-
-  const [size, setSize] = useState<{ w: number; h: number }>({ w: 560, h: 360 });
+  const [size, setSize] = useState<{ w: number; h: number }>({
+    w: 560,
+    h: 360,
+  });
 
   const [point, setPoint] = useState<{ x: number; y: number } | null>({
     x: style[0] * size.w,
@@ -117,7 +119,10 @@ function CoordsPicker() {
     }
     const x = Math.round(clientX - rect.left);
     const y = Math.round(clientY - rect.top);
-    return { x: Math.max(0, Math.min(size.w, x)), y: Math.max(0, Math.min(size.h, y)) };
+    return {
+      x: Math.max(0, Math.min(size.w, x)),
+      y: Math.max(0, Math.min(size.h, y)),
+    };
   }
 
   const updateNormalized = (px: number, py: number) => {
@@ -131,14 +136,18 @@ function CoordsPicker() {
     }
   };
 
-  const onDown = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+  const onDown = (
+    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
+  ) => {
     const p = toLocal(e);
     setPoint(p);
     setDragging(true);
     updateNormalized(p.x, p.y);
   };
 
-  const onMove = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+  const onMove = (
+    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
+  ) => {
     if (!dragging) return;
     const p = toLocal(e);
     setPoint(p);
@@ -151,7 +160,11 @@ function CoordsPicker() {
   };
 
   return (
-    <div ref={containerRef} className="block w-100" style={{ position: "relative" }}>
+    <div
+      ref={containerRef}
+      className="block w-100"
+      style={{ position: "relative" }}
+    >
       {/* BACKGROUND */}
       <EnglCanvas
         mountRef={containerRef}

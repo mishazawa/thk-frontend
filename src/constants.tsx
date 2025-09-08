@@ -8,3 +8,4 @@ export const SEQUENCE = [
 ] as const;
 
 export const CIRCLE_RADIUS = 40;
+export const POLLING_TIME = 1000;

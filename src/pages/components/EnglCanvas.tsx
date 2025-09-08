@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-
+import * as mod from "../../engl";
 type Props = {
   mountRef?: React.RefObject<HTMLDivElement>;
   style?: React.CSSProperties;
@@ -20,7 +20,7 @@ export function EnglCanvas({ mountRef, style, onReady }: Props) {
 
       if (!container.style.position) container.style.position = "relative";
 
-      const mod = await import("../../engl.js");
+      //@ts-expect-error
       const pipes = await import("../../pipes.js");
 
       const e = mod.engl_init();
@@ -79,7 +79,12 @@ export function EnglCanvas({ mountRef, style, onReady }: Props) {
   return (
     <div
       ref={localRef}
-      style={{ width: "100%", height: 360, position: "relative", ...(style || {}) }}
+      style={{
+        width: "100%",
+        height: 360,
+        position: "relative",
+        ...(style || {}),
+      }}
     />
   );
 }

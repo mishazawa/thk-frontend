@@ -1,5 +1,12 @@
-import { createContext, useContext, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 import { useLoader, useStore } from "./Store";
+import { POLLING_TIME } from "../constants";
 
 export function useServerCommunication() {
   const { set: _, currentScreen: _1, back: _2, next: _3, ...data } = useStore();
@@ -70,39 +77,30 @@ async function POST(data: any) {
   return await res.json();
 }
 
-async function checkServerReady(
-  url: string,
-  interval = 1000,
-  maxAttempts = 30
-): Promise<boolean> {
-  return new Promise((resolve) => {
-    let attempts = 0;
-    const timer = setInterval(async () => {
-      attempts++;
-      try {
-        const res = await fetch(url, { method: "GET" });
-        if (res.ok) {
-          clearInterval(timer);
-          resolve(true);
-        }
-      } catch (e) {
-        // server not ready yet
-      }
-      if (attempts >= maxAttempts) {
-        clearInterval(timer);
-        resolve(false);
-      }
-    }, interval);
-  });
+async function checkHealth(): Promise<boolean> {
+  try {
+    const res = await fetch(`${import.meta.env.VITE_SERVER}health`);
+    if (!res.ok) return false;
+    const json = await res.json();
+    return json.status === "ready";
+  } catch {
+    return false;
+  }
 }
 
-// (async () => {
-//   const ready = await checkServerReady(`${import.meta.env.VITE_SERVER}/health`);
-//   if (ready) {
-//     console.log("Server is ready, now send main request...");
-//     const data = await POST({ some: "payload" });
-//     console.log(data);
-//   } else {
-//     console.error("Server did not become ready in time");
-//   }
-// })();
+export function useCheckServerStatus() {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    let timer: any;
+    const poll = async () => {
+      const ok = await checkHealth();
+      setReady(ok);
+      timer = setTimeout(poll, POLLING_TIME);
+    };
+    poll();
+    return () => clearTimeout(timer);
+  }, []);
+
+  return ready;
+}

@@ -20,6 +20,7 @@
     "bootstrap": "^5.3.8",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "twgl.js": "^7.0.0",
     "zustand": "^5.0.8"
   },
   "devDependencies": {
