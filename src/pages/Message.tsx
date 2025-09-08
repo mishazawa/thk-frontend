@@ -1,7 +1,7 @@
 import { useModel } from "../utils/ModelProvider";
 import { isToxic } from "../utils";
 import { useTextFilter } from "../utils/TextFilterProvider";
-import { useStore } from "../utils/Store";
+import { useLoader, useStore } from "../utils/Store";
 import { Word } from "../dictionary";
 import { CustomButton } from "./components/Buttons";
 import { LargeText } from "./components/Text";
@@ -12,15 +12,23 @@ export function Message() {
   const filter = useTextFilter();
 
   const { set, text, next } = useStore();
+  const { setLoading } = useLoader();
 
   async function submit() {
-    const predictions = await model.classify(text);
-    const isProfane = filter.isProfane(text);
-    const isToxicPrediction = isToxic(predictions);
-    if (!(isProfane || isToxicPrediction)) {
-      return next();
+    setLoading(true);
+    try {
+      const predictions = await model.classify(text);
+      const isProfane = filter.isProfane(text);
+      const isToxicPrediction = isToxic(predictions);
+      if (!(isProfane || isToxicPrediction)) {
+        return next();
+      }
+      alert("Profanity is banned");
+    } catch (err) {
+      alert(err);
+    } finally {
+      setLoading(false);
     }
-    alert("Profanity is banned");
   }
 
   return (
