@@ -65,3 +65,40 @@ async function POST(data: any) {
   });
   return await res.json();
 }
+
+async function checkServerReady(
+  url: string,
+  interval = 1000,
+  maxAttempts = 30
+): Promise<boolean> {
+  return new Promise((resolve) => {
+    let attempts = 0;
+    const timer = setInterval(async () => {
+      attempts++;
+      try {
+        const res = await fetch(url, { method: "GET" });
+        if (res.ok) {
+          clearInterval(timer);
+          resolve(true);
+        }
+      } catch (e) {
+        // server not ready yet
+      }
+      if (attempts >= maxAttempts) {
+        clearInterval(timer);
+        resolve(false);
+      }
+    }, interval);
+  });
+}
+
+// (async () => {
+//   const ready = await checkServerReady(`${import.meta.env.VITE_SERVER}/health`);
+//   if (ready) {
+//     console.log("Server is ready, now send main request...");
+//     const data = await POST({ some: "payload" });
+//     console.log(data);
+//   } else {
+//     console.error("Server did not become ready in time");
+//   }
+// })();

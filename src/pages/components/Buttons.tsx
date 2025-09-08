@@ -46,12 +46,50 @@ export function SendButton() {
   );
 }
 
+
+import { useEffect, useState } from "react";
+
+
+async function checkHealth(): Promise<boolean> {
+  try {
+    const res = await fetch(`${import.meta.env.VITE_SERVER}health`);
+    if (!res.ok) return false;
+    const json = await res.json();
+    return json.status === "ready";
+  } catch {
+    return false;
+  }
+}
+
+// export function BackButton() {
+//   const { back } = useStore();
+
+//   return (
+//     <CustomButton onClick={back}>
+//       <Word t="ANOTHER_MESSAGE" />
+//     </CustomButton>
+//   );
+// }
+
+
 export function BackButton() {
   const { back } = useStore();
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    let timer: any;
+    const poll = async () => {
+      const ok = await checkHealth();
+      setReady(ok);
+      timer = setTimeout(poll, 1000); // check every 1s
+    };
+    poll();
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <CustomButton onClick={back}>
-      <Word t="ANOTHER_MESSAGE" />
+      {ready ? <Word t="ANOTHER_MESSAGE" /> : <Word t="WAITING_FOR_SERVER" />}
     </CustomButton>
   );
 }
