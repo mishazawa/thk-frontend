@@ -11,7 +11,7 @@ export type MakeShaderParams = {
 };
 
 export type ShaderProgram = {
-  tex: WebGLRenderbuffer | WebGLTexture;
+  tex: WebGLRenderbuffer | WebGLTexture | TextureObject;
   width: number;
   height: number;
   fbo: FramebufferInfo;

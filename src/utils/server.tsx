@@ -9,7 +9,7 @@ import { useLoader, useStore } from "./Store";
 import { POLLING_TIME } from "../constants";
 
 export function useServerCommunication() {
-  const { set: _, currentScreen: _1, back: _2, next: _3, ...data } = useStore();
+  const { text, dynamics, style } = useStore();
   const { setLoading } = useLoader();
 
   async function sendStart() {
@@ -19,7 +19,7 @@ export function useServerCommunication() {
   async function sendData() {
     try {
       setLoading(true);
-      const { status } = await POST(data);
+      const { status } = await POST({ text, dynamics, style });
       return Promise.resolve(status);
     } catch (e) {
       if (import.meta.env.DEV) {
