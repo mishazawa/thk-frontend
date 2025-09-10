@@ -49,12 +49,6 @@ function CoordsPicker() {
 
   const dpr = Math.max(1, Math.floor(window.devicePixelRatio || 1));
 
-  const pointRef = useRef<{ x: number; y: number } | null>(null);
-  const setPointAndUpdate = (p: { x: number; y: number }) => {
-    pointRef.current = p;
-    setPoint(p);
-  };
-
   useEffect(() => {
     let frameId: number;
     const canvas = canvasRef.current;
@@ -70,6 +64,7 @@ function CoordsPicker() {
 
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.scale(dpr, dpr);
+
       ctx.clearRect(0, 0, size.w, size.h);
 
       // axes
@@ -81,28 +76,20 @@ function CoordsPicker() {
       ctx.lineTo(Math.floor(size.w / 2) + 0.5, size.h);
       ctx.stroke();
 
-      const p = pointRef.current;
-      if (p) {
+      if (point) {
         ctx.strokeStyle = "#ffffff";
         ctx.fillStyle = "#ffffff33";
         ctx.beginPath();
-        ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+        ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
       }
 
-      // per-frame pipe blit
-      if (pipeRef.current && englRef.current) {
-        // pipeRef.current.update({ u_time: performance.now() * 0.001 }, false); // if needed
-        // englRef.current.blit(pipeRef.current.pipe.get("out").tex);
-      }
-
       frameId = requestAnimationFrame(render);
     };
-
     render();
     return () => cancelAnimationFrame(frameId);
-  }, [size, dpr, radius]);
+  }, [size, dpr, point]);
 
   function toLocal(
     e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
@@ -126,38 +113,35 @@ function CoordsPicker() {
     const nx = px / size.w;
     const ny = py / size.h;
     set("style", [nx, ny] as [number, number]);
-    // if (pipeRef.current && englRef.current) {
-      pipeRef.current.update_params({ u_xy: [nx, ny] }, false);
-    //   englRef.current.blit(pipeRef.current.pipe.get("out").tex);
-    // }
+
+    if (pipeRef.current && englRef.current) {
+      pipeRef.current.update({ u_xy: [nx, ny] }, false);
+      englRef.current.blit(pipeRef.current.pipe.get("out").tex);
+    }
   };
 
-  const onDown = (
-    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
-  ) => {
+  const onDown = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     const p = toLocal(e);
-    setPointAndUpdate(p);
+    setPoint(p);
     setDragging(true);
     updateNormalized(p.x, p.y);
   };
 
-  const onMove = (
-    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
-  ) => {
+  const onMove = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     if (!dragging) return;
     const p = toLocal(e);
-    setPointAndUpdate(p);
+    setPoint(p);
     updateNormalized(p.x, p.y);
   };
 
   const onUpOrLeave = () => {
     setDragging(false);
-    const p = pointRef.current;
-    if (p) updateNormalized(p.x, p.y);
+    if (point) updateNormalized(point.x, point.y);
   };
 
   return (
     <div ref={containerRef} className="block w-100" style={{ position: "relative" }}>
+      {/* BACKGROUND */}
       <EnglCanvas
         mountRef={containerRef}
         onReady={(engl, pipe) => {
@@ -165,6 +149,8 @@ function CoordsPicker() {
           pipeRef.current = pipe;
         }}
       />
+
+      {/* FOREGROUND */}
       <canvas
         ref={canvasRef}
         width={size.w}

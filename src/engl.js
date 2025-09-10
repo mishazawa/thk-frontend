@@ -5,8 +5,8 @@ import * as twgl from './twgl-full.module.js';
 
 export function engl_init() {
     const canvas = document.createElement('canvas');
-    canvas.width = 512;
-    canvas.height = 512;
+    // canvas.width = 512;
+    // canvas.height = 512;
     // document.body.appendChild(canvas);
     // canvas.style.border = '1px solid black';
 

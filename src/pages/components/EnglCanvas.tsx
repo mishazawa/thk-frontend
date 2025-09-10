@@ -3,13 +3,15 @@ import React, { useEffect, useRef } from "react";
 type Props = {
   mountRef?: React.RefObject<HTMLDivElement>;
   style?: React.CSSProperties;
-  onReady?: (engl: any, pipe: any) => void; // expose both
+  onReady?: (engl: any, pipe: any) => void;
 };
 
 export function EnglCanvas({ mountRef, style, onReady }: Props) {
   const localRef = useRef<HTMLDivElement | null>(null);
   const englRef = useRef<any>(null);
+  const pipeRef = useRef<any>(null);
   const roRef = useRef<ResizeObserver | null>(null);
+  const rafIdRef = useRef<number | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -37,7 +39,7 @@ export function EnglCanvas({ mountRef, style, onReady }: Props) {
           height: "100%",
           zIndex: "0",
           pointerEvents: "none",
-        });
+        } as CSSStyleDeclaration);
         container.appendChild(e.canvas);
       }
 
@@ -56,21 +58,43 @@ export function EnglCanvas({ mountRef, style, onReady }: Props) {
       ro.observe(container);
       roRef.current = ro;
 
-      // pipeline
-      const pipe = pipes.Style(e, {});
-      pipe.update({ u_xy: [0.5, 0.5] }, true);
+      const pipe = pipes.Style(e, { width: e.canvas.width, height: e.canvas.height, u_xy: [0.5, 0.5] });
+      pipeRef.current = pipe;
+
+      // first blit (optional)
       e.blit(pipe.pipe.get("out").tex);
 
-      // ✅ hand both back
       onReady?.(e, pipe);
+
+      // --- continuous render loop (30 fps) ---
+      let last = 0;
+      const loop = (t: number) => {
+        if (cancelled) return;
+
+        // only render if 33ms have passed (~30fps)
+        if (t - last >= 1000 / 30) {
+          last = t;
+          pipe.update({ u_time: t * 0.001 }, false);
+          e.blit(pipe.pipe.get("out").tex);
+        }
+
+        rafIdRef.current = requestAnimationFrame(loop);
+      };
+      rafIdRef.current = requestAnimationFrame(loop);
     })();
 
     return () => {
       cancelled = true;
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current);
+        rafIdRef.current = null;
+      }
       roRef.current?.disconnect();
+      roRef.current = null;
       const e = englRef.current;
       if (e?.canvas?.parentNode) e.canvas.parentNode.removeChild(e.canvas);
       englRef.current = null;
+      pipeRef.current = null;
     };
   }, []);
 
