@@ -12,6 +12,7 @@ import {
 import { LargeText } from "./components/Text";
 import { Page } from "./components/Container";
 import { CustomKeyboard } from "./components/Keyboard";
+import { MESSAGE_MAX_LENGTH } from "../constants";
 
 export function Message() {
   const model = useModel();
@@ -42,9 +43,11 @@ export function Message() {
       <LargeText>
         <Word t="MESSAGE" />
       </LargeText>
-      <div className="input_rounded w-100">{text}</div>
+      <div className="input_rounded w-100 text-break text-center justify-content-center d-flex align-items-center">
+        {text}
+      </div>
       <Controls />
-      <CustomKeyboard />
+      <CustomKeyboard max={MESSAGE_MAX_LENGTH} />
     </Page>
   );
 }

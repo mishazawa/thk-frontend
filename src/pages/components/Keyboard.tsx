@@ -4,7 +4,7 @@ import "react-simple-keyboard/build/css/index.css";
 import { useStore } from "../../utils/Store";
 import { KEYBOARD_LAYOUT } from "../../constants";
 
-export function CustomKeyboard() {
+export function CustomKeyboard({ max }: { max: number }) {
   const { set } = useStore();
 
   function onChange(value: string) {
@@ -15,6 +15,7 @@ export function CustomKeyboard() {
   return (
     <KKK
       onChange={onChange}
+      maxLength={max}
       theme={"hg-theme-default hg-layout-default myTheme"}
       layout={{ default: KEYBOARD_LAYOUT }}
       autoUseTouchEvents

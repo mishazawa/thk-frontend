@@ -13,6 +13,7 @@ import { useStore } from "./utils/Store";
 import { SEQUENCE } from "./constants";
 import { EnglProvider } from "./utils/EnlgProvider";
 import { Mood } from "./pages/Mood";
+import { Manifest } from "./pages/Manifest";
 
 function App() {
   return (
@@ -37,8 +38,10 @@ function SelectScreen() {
   const screenName = SEQUENCE[currentScreen];
   if (!screenName) return <>Err</>;
   switch (screenName) {
-    // case "Start":
-    //   return <StartPage />;
+    case "Start":
+      return <StartPage />;
+    case "Manifest":
+      return <Manifest />;
     case "Style":
       return <VisualVibe />;
     case "Message":
@@ -47,6 +50,8 @@ function SelectScreen() {
       return <Mood />;
     case "Done":
       return <Done />;
+    default:
+      return <div>{screenName}</div>;
   }
 }
 

@@ -1,6 +1,7 @@
 export const START_SCREEN = 0;
 export const SEQUENCE = [
-  // "Start",
+  "Start",
+  "Manifest",
   "Message",
   "Style",
   "Mood",
@@ -15,3 +16,5 @@ export const KEYBOARD_LAYOUT = [
   "Z X C V B N M {bksp}",
   "{space}",
 ];
+
+export const MESSAGE_MAX_LENGTH = 100;

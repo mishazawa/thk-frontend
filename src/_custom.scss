@@ -36,7 +36,7 @@
 
 .input {
   &_rounded {
-    font-size: 2rem;
+    font-size: 3rem;
     padding: 1rem;
     outline: none !important;
     box-shadow: none !important;
@@ -46,25 +46,6 @@
     min-height: 15rem;
     text-align: start;
   }
-}
-
-.vertical-range-rotate {
-  writing-mode: vertical-lr;
-  direction: rtl;
-  appearance: slider-vertical;
-  width: 16px;
-  vertical-align: bottom;
-}
-
-.mood_container {
-  height: 70vh;
-  max-height: 70vh;
-  min-height: 300px;
-}
-.canvas_MOCK {
-  flex: 0 0 90%;
-  height: 70vh;
-  background-color: red;
 }
 
 .full-black {
