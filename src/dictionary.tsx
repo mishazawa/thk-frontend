@@ -25,6 +25,8 @@ From once a symbol of harmony through light and reflection, The THK Tower now ev
 This moment reminds us: change begins within. By sharing what is true, by carrying value in each step, we bring balance once more.
 
 Are you ready to step in?`;
+
+export const PROFANITY_DETECTED = "Profanity is banned.";
 const DICT = {
   START,
   QUESTION,
@@ -49,6 +51,7 @@ const DICT = {
   YES,
   NO,
   SERVER_BUSY,
+  PROFANITY_DETECTED,
 } as const;
 
 export function Word<K extends keyof typeof DICT>({ t }: { t: K }) {
