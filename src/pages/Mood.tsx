@@ -1,6 +1,6 @@
 import { Word } from "../dictionary";
 import { useStore } from "../utils/Store";
-import { Controls } from "./components/Buttons";
+import { ControlsSend } from "./components/Buttons";
 import { Page } from "./components/Container";
 import { LargeText, RotatedText } from "./components/Text";
 
@@ -39,7 +39,7 @@ export function Mood() {
       <div className="w-100 text-center">
         <Word t="MOOD_WORD_4" />
       </div>
-      <Controls />
+      <ControlsSend />
     </Page>
   );
 }

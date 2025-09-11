@@ -11,13 +11,21 @@ export function SpaceBetween({ children }: { children: ReactNode }) {
 export function RotatedText({
   children,
   cw = false,
+  invisible = false,
 }: {
   children: ReactNode;
   cw?: boolean;
+  invisible?: boolean;
 }) {
   return (
-    <div className="h-100 d-flex">
-      <span className={`rotated-text-${cw ? "CW" : "CCW"}`}>{children}</span>
+    <div className="h-100 d-flex rotated-wrapper">
+      <span
+        className={`rotated-text-${cw ? "CW" : "CCW"} ${
+          invisible ? "opacity-0" : ""
+        }`}
+      >
+        {children}
+      </span>
     </div>
   );
 }

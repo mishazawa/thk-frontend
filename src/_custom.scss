@@ -13,8 +13,7 @@
 }
 
 .btn {
-  background-color: $blue-800;
-  border-color: $blue-300;
+  border-color: $gray-300;
   letter-spacing: 0.2rem;
 
   &_rounded {
@@ -25,6 +24,13 @@
 
   &_large {
     padding: 1rem 3rem;
+  }
+
+  &_hint_blue {
+    border-color: $blue-300;
+  }
+  &_hint_green {
+    border-color: $green-300;
   }
 }
 
@@ -48,6 +54,9 @@
   }
 }
 
+.rotated-wrapper {
+  max-width: 3rem;
+}
 .rotated-text {
   display: inline-block; /* needed so transform applies nicely */
   &-CCW {

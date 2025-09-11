@@ -14,7 +14,7 @@ export function StartPage() {
   return (
     <>
       <div className="container-fluid d-flex flex-grow-1 align-items-center justify-content-center">
-        <CustomButton onClick={proceed}>
+        <CustomButton onClick={proceed} className="btn_hint_blue">
           <Word t="START" />
         </CustomButton>
       </div>

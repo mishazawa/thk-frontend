@@ -34,7 +34,7 @@ export function CustomButton({
   );
 }
 
-export function SendButton() {
+export function SendButton(props: any) {
   const { next } = useStore();
   const { sendData } = useCommunicator();
 
@@ -44,7 +44,7 @@ export function SendButton() {
       .catch((err) => alert(err));
   }
   return (
-    <CustomButton onClick={() => send()}>
+    <CustomButton onClick={() => send()} {...props}>
       <Word t="SEND" />
     </CustomButton>
   );
@@ -83,7 +83,16 @@ export function Controls() {
   return (
     <div className="w-100 d-flex justify-content-between gap-5">
       <BackStepButton className="flex-fill" />
-      <NextStepButton className="flex-fill" />
+      <NextStepButton className="flex-fill btn_hint_blue" />
+    </div>
+  );
+}
+
+export function ControlsSend() {
+  return (
+    <div className="w-100 d-flex justify-content-between gap-5">
+      <BackStepButton className="flex-fill" />
+      <SendButton className="flex-fill btn_hint_green" />
     </div>
   );
 }

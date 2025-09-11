@@ -12,7 +12,7 @@ export function Manifest() {
         </LargeText>
         <Word t="MANIFEST" />
 
-        <NextStepButton />
+        <NextStepButton className="btn_hint_blue" />
       </Page>
     </>
   );

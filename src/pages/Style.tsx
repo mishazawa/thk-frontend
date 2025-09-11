@@ -1,6 +1,6 @@
 import { Word } from "../dictionary";
 import { Controls } from "./components/Buttons";
-import { LargeText, SpaceBetween } from "./components/Text";
+import { LargeText, RotatedText, SpaceBetween } from "./components/Text";
 import { Page } from "./components/Container";
 import { ShaderCanvas } from "./components/ShaderCanvas";
 import { useEngl } from "../utils/EnlgProvider";
@@ -22,17 +22,29 @@ export function VisualVibe() {
       <LargeText>
         <Word t="QUESTION" />
       </LargeText>
-      <>
+
+      <div className="w-100 text-center">
         <SpaceBetween>
           <Word t="STYLE_WORD_1" />
           <Word t="STYLE_WORD_3" />
         </SpaceBetween>
+      </div>
+      <div className="d-flex flex-row w-100 align-items-center">
+        <RotatedText invisible>
+          <Word t="MOOD_WORD_2" />
+        </RotatedText>
         <ShaderCanvas updateFn={update} value={style} />
+        <RotatedText cw invisible>
+          <Word t="MOOD_WORD_3" />
+        </RotatedText>
+      </div>
+      <div className="w-100 text-center">
         <SpaceBetween>
           <Word t="STYLE_WORD_4" />
           <Word t="STYLE_WORD_2" />
         </SpaceBetween>
-      </>
+      </div>
+
       <Controls />
     </Page>
   );
