@@ -3,18 +3,20 @@ import { isToxic } from "../utils/index";
 import { useTextFilter } from "../utils/TextFilterProvider";
 import { useLoader, useStore } from "../utils/Store";
 import { Word } from "../dictionary";
-import { CustomButton } from "./components/Buttons";
+import { Controls } from "./components/Buttons";
 import { LargeText } from "./components/Text";
 import { Page } from "./components/Container";
+import { CustomKeyboard } from "./components/Keyboard";
+import { MESSAGE_MAX_LENGTH } from "../constants";
 
 export function Message() {
   const model = useModel();
   const filter = useTextFilter();
 
-  const { set, text, next } = useStore();
+  const { text, next } = useStore();
   const { setLoading } = useLoader();
 
-  async function submit() {
+  async function validate() {
     setLoading(true);
     try {
       const predictions = await model.classify(text);
@@ -36,18 +38,11 @@ export function Message() {
       <LargeText>
         <Word t="MESSAGE" />
       </LargeText>
-      <input
-        className="input_rounded w-100"
-        value={text}
-        onChange={(e) => {
-          set("text", e.target.value);
-          window.TEMP_TEXT = e.target.value;
-        }}
-      ></input>
-      <br />
-      <CustomButton onClick={submit}>
-        <Word t="DONE" />
-      </CustomButton>
+      <div className="input_rounded w-100 text-break text-center justify-content-center d-flex align-items-center">
+        {text}
+      </div>
+      <Controls callback={validate} />
+      <CustomKeyboard max={MESSAGE_MAX_LENGTH} />
     </Page>
   );
 }

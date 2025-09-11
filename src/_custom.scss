@@ -13,14 +13,8 @@
 }
 
 .btn {
-  background-color: $blue-800;
-  border-color: $blue-300;
+  border-color: $gray-300;
   letter-spacing: 0.2rem;
-  &_start {
-    width: 10rem;
-    height: 10rem;
-    border-radius: 100%;
-  }
 
   &_rounded {
     background-color: $gray-800;
@@ -30,6 +24,13 @@
 
   &_large {
     padding: 1rem 3rem;
+  }
+
+  &_hint_blue {
+    border-color: $blue-300;
+  }
+  &_hint_green {
+    border-color: $green-300;
   }
 }
 
@@ -41,37 +42,65 @@
 
 .input {
   &_rounded {
-    font-size: 1rem;
+    font-size: 3rem;
     padding: 1rem;
     outline: none !important;
     box-shadow: none !important;
     background-color: $gray-800;
     border: 1px solid $gray-300;
     border-radius: 1rem;
+    min-height: 15rem;
+    text-align: start;
   }
 }
 
-.vertical-range-rotate {
-  writing-mode: vertical-lr;
-  direction: rtl;
-  appearance: slider-vertical;
-  width: 16px;
-  vertical-align: bottom;
+.rotated-wrapper {
+  max-width: 3rem;
 }
-
-.mood_container {
-  height: 70vh;
-  max-height: 70vh;
-  min-height: 300px;
-}
-.canvas_MOCK {
-  flex: 0 0 90%;
-  height: 70vh;
-  background-color: red;
+.rotated-text {
+  display: inline-block; /* needed so transform applies nicely */
+  &-CCW {
+    transform: rotate(-90deg); /* 90° counterclockwise */
+  }
+  &-CW {
+    transform: rotate(90deg); /* 90° clockwise */
+  }
 }
 
 .full-black {
   background-color: #000000cc;
   width: 100%;
   height: 100%;
+}
+
+// override keyboard styles
+
+.simple-keyboard.hg-theme-default.myTheme {
+  touch-action: manipulation;
+  border-radius: 10px;
+  background-color: var(--bs-body-bg);
+
+  margin: -3rem;
+  width: calc(100% + 6rem);
+  height: 25vh;
+
+  .hg-rows {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .hg-row {
+    flex-grow: 1;
+    display: flex;
+    height: 100%;
+  }
+  .hg-button {
+    flex-grow: 1;
+    height: 100%;
+
+    background-color: #333333;
+    color: white;
+  }
 }

@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 
-import { Done } from "./pages/Done";
+import { SendStatus } from "./pages/SendStatus";
 import { Message } from "./pages/Message";
-// import { Mood } from "./pages/Mood";
+
 import { StartPage } from "./pages/Start";
 import { VisualVibe } from "./pages/Style";
 import { ModelProvider } from "./utils/ModelProvider";
@@ -11,6 +11,10 @@ import { TextFilterProvider } from "./utils/TextFilterProvider";
 import { CommunicatorProvider } from "./utils/server";
 import { useStore } from "./utils/Store";
 import { SEQUENCE } from "./constants";
+import { EnglProvider } from "./utils/EnlgProvider";
+import { Mood } from "./pages/Mood";
+import { Manifest } from "./pages/Manifest";
+import { ReturnScreen } from "./pages/ReturnScreen";
 
 function App() {
   return (
@@ -18,7 +22,9 @@ function App() {
       <CommunicatorProvider>
         <ModelProvider>
           <TextFilterProvider>
-            <SelectScreen />
+            <EnglProvider>
+              <SelectScreen />
+            </EnglProvider>
           </TextFilterProvider>
         </ModelProvider>
       </CommunicatorProvider>
@@ -35,14 +41,20 @@ function SelectScreen() {
   switch (screenName) {
     case "Start":
       return <StartPage />;
-    case "VisualVibe":
+    case "Manifest":
+      return <Manifest />;
+    case "Style":
       return <VisualVibe />;
     case "Message":
       return <Message />;
-    // case "Mood":
-    //   return <Mood />;
+    case "Mood":
+      return <Mood />;
+    case "SendStatus":
+      return <SendStatus />;
     case "Done":
-      return <Done />;
+      return <ReturnScreen />;
+    default:
+      return <div>{screenName}</div>;
   }
 }
 

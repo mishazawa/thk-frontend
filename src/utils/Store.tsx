@@ -1,9 +1,9 @@
 import { create } from "zustand";
-import { SEQUENCE, START_SCREEN } from "../constants";
+import { MESSAGE_SCREEN, SEQUENCE, START_SCREEN } from "../constants";
 
 type ServerData = {
   text: string;
-  dynamics: number;
+  dynamics: [number, number];
   style: [number, number];
 };
 
@@ -12,8 +12,8 @@ type ScreenData = {
 };
 
 type ScreenSetter = {
-  next: () => void;
-  back: () => void;
+  next: (value?: number) => void;
+  back: (readManifest?: boolean) => void;
 };
 
 type ServerDataSetter = {
@@ -29,9 +29,13 @@ type LoaderDataSetter = {
 
 const INITIAL_STATE: ServerData & ScreenData = {
   text: "",
-  dynamics: 0.5,
+  dynamics: [0.5, 0.5],
   style: [0.5, 0.5],
   currentScreen: START_SCREEN,
+};
+
+const MESSAGE_AGAIN_STATE = {
+  currentScreen: SEQUENCE.indexOf(MESSAGE_SCREEN),
 };
 
 export const useStore = create<
@@ -39,11 +43,18 @@ export const useStore = create<
 >((set) => ({
   set: <K extends keyof ServerData>(step: K, value: ServerData[K]) =>
     set(() => ({ [step]: value })),
-  next: () =>
+  next: (value: number = 1) =>
     set((s) => ({
-      currentScreen: Math.min(s.currentScreen + 1, SEQUENCE.length - 1),
+      currentScreen: Math.max(
+        0,
+        Math.min(s.currentScreen + value, SEQUENCE.length - 1)
+      ),
     })),
-  back: () => set(INITIAL_STATE),
+
+  back: (readManifest = true) =>
+    readManifest
+      ? set(INITIAL_STATE)
+      : set({ ...INITIAL_STATE, ...MESSAGE_AGAIN_STATE }),
   ...INITIAL_STATE,
 }));
 

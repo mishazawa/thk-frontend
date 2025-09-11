@@ -1,54 +1,45 @@
-import Slider from "@mui/material/Slider";
 import { Word } from "../dictionary";
 import { useStore } from "../utils/Store";
-import { SendButton } from "./components/Buttons";
+import { ControlsSend } from "./components/Buttons";
 import { Page } from "./components/Container";
-import { LargeText } from "./components/Text";
-import Stack from "@mui/material/Stack";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { LargeText, RotatedText } from "./components/Text";
+
+import { ShaderCanvas } from "./components/ShaderCanvas";
+import { useEngl } from "../utils/EnlgProvider";
+
 export function Mood() {
+  const { pipe } = useEngl();
   const { set, dynamics } = useStore();
-  const theme = createTheme({
-    palette: {
-      primary: {
-        light: "#ffffff",
-        main: "#ffffff",
-        dark: "#ffffff",
-        contrastText: "#fff",
-      },
-      secondary: {
-        light: "#ff7961",
-        main: "#f44336",
-        dark: "#ba000d",
-        contrastText: "#000",
-      },
-    },
-  });
+
+  function update(nx: number, ny: number) {
+    set("dynamics", [nx, ny] as [number, number]);
+    // if (pipeRef.current && englRef.current) {
+    pipe.update_params({ u_zw: [nx, ny] }, false);
+    //   englRef.current.blit(pipeRef.current.pipe.get("out").tex);
+    // }
+  }
+
   return (
     <Page>
       <LargeText>
         <Word t="MOOD" />
       </LargeText>
-      <div className="d-flex align-items-end w-200 mood_container">
-        <div className="canvas_MOCK"></div>
-        <div className="d-flex flex-grow-1 h-100 align-self-end">
-          <ThemeProvider theme={theme}>
-            <Stack spacing={1} direction="row">
-              <Slider
-                orientation="vertical"
-                valueLabelDisplay="off"
-                value={dynamics}
-                step={0.01}
-                min={0}
-                max={1}
-                onChange={(_, v) => set("dynamics", v)}
-              />
-            </Stack>
-          </ThemeProvider>
-        </div>
+      <div className="w-100 text-center">
+        <Word t="MOOD_WORD_1" />
       </div>
-      <br />
-      <SendButton />
+      <div className="d-flex flex-row w-100 align-items-center">
+        <RotatedText>
+          <Word t="MOOD_WORD_2" />
+        </RotatedText>
+        <ShaderCanvas updateFn={update} value={dynamics} />
+        <RotatedText cw>
+          <Word t="MOOD_WORD_3" />
+        </RotatedText>
+      </div>
+      <div className="w-100 text-center">
+        <Word t="MOOD_WORD_4" />
+      </div>
+      <ControlsSend />
     </Page>
   );
 }
