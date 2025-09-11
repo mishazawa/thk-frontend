@@ -1,5 +1,5 @@
 import { useModel } from "../utils/ModelProvider";
-import { isToxic } from "../utils";
+import { isToxic } from "../utils/index";
 import { useTextFilter } from "../utils/TextFilterProvider";
 import { useStore } from "../utils/Store";
 import { Word } from "../dictionary";
@@ -17,6 +17,7 @@ export function Message() {
     const predictions = await model.classify(text);
     const isProfane = filter.isProfane(text);
     const isToxicPrediction = isToxic(predictions);
+    // const isToxicPrediction = true;
     if (!(isProfane || isToxicPrediction)) {
       return next();
     }

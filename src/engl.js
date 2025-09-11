@@ -3,16 +3,16 @@
 import * as twgl from './twgl-full.module.js';
 
 
-export function engl_init() {
+export function engl_init(width, height) {
     const canvas = document.createElement('canvas');
-    // canvas.width = 512;
-    // canvas.height = 512;
+    canvas.width = width;
+    canvas.height = height;
     // document.body.appendChild(canvas);
     // canvas.style.border = '1px solid black';
 
     const gl = canvas.getContext('webgl2');
-    const ext = gl.getExtension('EXT_color_buffer_float');
-    if (!ext) throw new Error('EXT_color_buffer_float is required for RGBA32F FBOs.');
+    // const ext = gl.getExtension('EXT_color_buffer_float');
+    // if (!ext) throw new Error('EXT_color_buffer_float is required for RGBA32F FBOs.');
 
 
 

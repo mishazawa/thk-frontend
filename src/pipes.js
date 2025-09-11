@@ -1,9 +1,39 @@
-import { imageToArray } from "./utils";
+import { imageToArray, canvasToArray } from "./utils";
 import { simplex3d, fast_blur } from "./glsl_funs";
 
 export function Style(engl, params) {
 
     const pipe = new Map();
+
+    
+    const text_canvas = document.createElement("canvas");
+    text_canvas.width = params.width;
+    text_canvas.height = params.height;
+
+    const text_ctx = text_canvas.getContext("2d");
+    // let font = new FontFace('custom', 'url(/fonts/SuisseIntl-Medium.ttf)');
+    function set_text(text) {
+      let dist = 150;
+      let tsize = 120;
+
+      let lines = text.split(" ");
+
+      text_ctx.fillStyle = "black";
+      text_ctx.fillRect(0, 0, text_canvas.width, text_canvas.height);
+      text_ctx.font = `bold ${tsize}px SuisseIntl`;
+      text_ctx.textAlign = "center";
+      text_ctx.textBaseline = "middle";
+      text_ctx.fillStyle = "white";
+
+      let full_dist = dist * (lines.length - 1);
+      let start_y = (text_canvas.height - full_dist) / 2;
+      for (let line of lines) {
+        text_ctx.fillText(line, text_canvas.width/2, start_y + dist * lines.indexOf(line));
+      }
+      const img_data = canvasToArray(text_canvas);
+      src_tex.update(img_data);
+      console.log("Loaded test image from", test_src_path);
+    }
 
     const test_src_path = "/thk.png";
     const test_img = new Image();
@@ -12,11 +42,7 @@ export function Style(engl, params) {
     const src_tex = engl.make_texture([[ [0,0,0,1] ]]); // placeholder 1x1 black
     console.log(test_img)
 
-    test_img.onload = async () => {
-        const img_data = await imageToArray(test_img);
-        src_tex.update(img_data);
-        console.log("Loaded test image from", test_src_path);
-    };
+    // };
 
     pipe.set("feedback", engl.make_shader({
         fragment_shader: `#version 300 es
@@ -46,7 +72,7 @@ uniform float u_d_yoff;
 uniform float u_f_noise;
 uniform float u_f_blur;
 uniform float u_f_fade;
-` + simplex3d + `
+${simplex3d}
 void main() {
 
     // Displace
@@ -237,7 +263,7 @@ void main() {
     outColor = vec4(final_color, 1.0);
 } `,    width: params.width, height: params.height, format: "rgba8", filter: "linear" }));
 
-
+        
     const textures = {
         u_src: src_tex.tex,
     };
@@ -326,6 +352,7 @@ void main() {
     //     u_f_blur: 0.0,
     //     u_f_fade: 0.5
     //   };
+
     const params_defaults = {
         u_edgeStrength: 1.0,
         u_edgeThreshold: 0.0,
@@ -338,15 +365,9 @@ void main() {
         if (init) { frame = 0; }
         const { px, py } = input;
 
-
-
         let cross1 = mix_params(feedparams00, feedparams01, params.u_xy[0]);
         let cross2 = mix_params(feedparams10, feedparams11, params.u_xy[0]);
         let final_params = mix_params(cross1, cross2, params.u_xy[1]);
-
-
-
-
 
         const uniforms = {
           u_init: init,
@@ -385,7 +406,8 @@ void main() {
               params[key] = value;
               // console.log(`Updated param ${key} to`, value);
             }
-        }
+        },
+        set_text: set_text,
     }
 
 }

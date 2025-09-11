@@ -25,7 +25,7 @@ export function EnglCanvas({ mountRef, style, onReady }: Props) {
       const mod = await import("../../engl.js");
       const pipes = await import("../../pipes.js");
 
-      const e = mod.engl_init();
+      const e = mod.engl_init(1024, 1024);
       if (cancelled) return;
       englRef.current = e;
 
@@ -43,26 +43,27 @@ export function EnglCanvas({ mountRef, style, onReady }: Props) {
         container.appendChild(e.canvas);
       }
 
-      const resize = () => {
-        const rect = container.getBoundingClientRect();
-        const w = Math.max(1, Math.round(rect.width));
-        const h = Math.max(1, Math.round(rect.height));
-        const dpr = window.devicePixelRatio || 1;
-        e.resize(w, h, dpr);
-        e.canvas.style.width = `${rect.width}px`;
-        e.canvas.style.height = `${rect.height}px`;
-      };
-      resize();
+      // const resize = () => {
+      //   const rect = container.getBoundingClientRect();
+      //   const w = Math.max(1, Math.round(rect.width));
+      //   const h = Math.max(1, Math.round(rect.height));
+      //   const dpr = window.devicePixelRatio || 1;
+      //   e.resize(w, h, dpr);
+      //   e.canvas.style.width = `${rect.width}px`;
+      //   e.canvas.style.height = `${rect.height}px`;
+      // };
+      // resize();
 
-      const ro = new ResizeObserver(resize);
-      ro.observe(container);
-      roRef.current = ro;
+      // const ro = new ResizeObserver(resize);
+      // ro.observe(container);
+      // roRef.current = ro;
 
       const pipe = pipes.Style(e, { width: e.canvas.width, height: e.canvas.height, u_xy: [0.5, 0.5] });
       pipeRef.current = pipe;
+      pipe.set_text("HELLO WORLD");
 
       // first blit (optional)
-      e.blit(pipe.pipe.get("out").tex);
+      // e.blit(pipe.pipe.get("out").tex);
 
       onReady?.(e, pipe);
 

@@ -1,7 +1,17 @@
+@font-face {
+  font-family: "SuisseIntl";
+  src: url("fonts/SuisseIntl-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
   text-align: center;
+  font-family: "SuisseIntl";
 }
 
 .btn {
@@ -59,3 +69,5 @@
   height: 70vh;
   background-color: red;
 }
+
+

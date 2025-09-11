@@ -49,7 +49,6 @@ export function SendButton() {
 
 import { useEffect, useState } from "react";
 
-
 async function checkHealth(): Promise<boolean> {
   try {
     const res = await fetch(`${import.meta.env.VITE_SERVER}health`);
@@ -60,17 +59,6 @@ async function checkHealth(): Promise<boolean> {
     return false;
   }
 }
-
-// export function BackButton() {
-//   const { back } = useStore();
-
-//   return (
-//     <CustomButton onClick={back}>
-//       <Word t="ANOTHER_MESSAGE" />
-//     </CustomButton>
-//   );
-// }
-
 
 export function BackButton() {
   const { back } = useStore();

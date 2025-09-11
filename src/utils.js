@@ -71,3 +71,29 @@ export async function imageToArray(img) {
   canvas.width = canvas.height = 0;
   return out; // [H][W][4]
 }
+
+// Convert canvas pixels into [H][W][4] array with values in 0..1
+export function canvasToArray(canvas) {
+  var w = canvas.width, h = canvas.height;
+  var ctx = canvas.getContext("2d", { willReadFrequently: true });
+  if (!ctx) throw new Error("canvasToArray: 2D context unavailable");
+
+  var data = ctx.getImageData(0, 0, w, h).data;
+
+  var out = new Array(h);
+  var i = 0;
+  for (var y = 0; y < h; y++) {
+    var row = new Array(w);
+    for (var x = 0; x < w; x++) {
+      row[x] = [
+        data[i] / 255,
+        data[i + 1] / 255,
+        data[i + 2] / 255,
+        data[i + 3] / 255
+      ];
+      i += 4;
+    }
+    out[y] = row;
+  }
+  return out; // [H][W][4]
+}
