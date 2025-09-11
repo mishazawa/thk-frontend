@@ -3,9 +3,15 @@ import { isToxic } from "../utils/index";
 import { useTextFilter } from "../utils/TextFilterProvider";
 import { useLoader, useStore } from "../utils/Store";
 import { Word } from "../dictionary";
-import { CustomButton } from "./components/Buttons";
+import {
+  BackStepButton,
+  Controls,
+  CustomButton,
+  NextStepButton,
+} from "./components/Buttons";
 import { LargeText } from "./components/Text";
 import { Page } from "./components/Container";
+import { CustomKeyboard } from "./components/Keyboard";
 
 export function Message() {
   const model = useModel();
@@ -14,7 +20,7 @@ export function Message() {
   const { set, text, next } = useStore();
   const { setLoading } = useLoader();
 
-  async function submit() {
+  async function validate() {
     setLoading(true);
     try {
       const predictions = await model.classify(text);
@@ -36,18 +42,9 @@ export function Message() {
       <LargeText>
         <Word t="MESSAGE" />
       </LargeText>
-      <input
-        className="input_rounded w-100"
-        value={text}
-        onChange={(e) => {
-          set("text", e.target.value);
-          window.TEMP_TEXT = e.target.value;
-        }}
-      ></input>
-      <br />
-      <CustomButton onClick={submit}>
-        <Word t="DONE" />
-      </CustomButton>
+      <div className="input_rounded w-100">{text}</div>
+      <Controls />
+      <CustomKeyboard />
     </Page>
   );
 }

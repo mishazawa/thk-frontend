@@ -1,6 +1,6 @@
 import { Word } from "../dictionary";
 import { useCheckServerStatus } from "../utils/server";
-import { BackButton } from "./components/Buttons";
+import { BackToStartButton } from "./components/Buttons";
 import { Page } from "./components/Container";
 import { LargeText } from "./components/Text";
 
@@ -12,7 +12,7 @@ export function Done() {
       <LargeText>
         <Word t="SEND_SUCCESS" />
       </LargeText>
-      <BackButton isReady={isReady} />
+      <BackToStartButton isReady={isReady} />
     </Page>
   );
 }

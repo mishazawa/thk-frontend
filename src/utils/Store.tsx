@@ -3,7 +3,7 @@ import { SEQUENCE, START_SCREEN } from "../constants";
 
 type ServerData = {
   text: string;
-  dynamics: number;
+  dynamics: [number, number];
   style: [number, number];
 };
 
@@ -12,7 +12,7 @@ type ScreenData = {
 };
 
 type ScreenSetter = {
-  next: () => void;
+  next: (value?: number) => void;
   back: () => void;
 };
 
@@ -29,7 +29,7 @@ type LoaderDataSetter = {
 
 const INITIAL_STATE: ServerData & ScreenData = {
   text: "",
-  dynamics: 0.5,
+  dynamics: [0.5, 0.5],
   style: [0.5, 0.5],
   currentScreen: START_SCREEN,
 };
@@ -39,10 +39,14 @@ export const useStore = create<
 >((set) => ({
   set: <K extends keyof ServerData>(step: K, value: ServerData[K]) =>
     set(() => ({ [step]: value })),
-  next: () =>
+  next: (value: number = 1) =>
     set((s) => ({
-      currentScreen: Math.min(s.currentScreen + 1, SEQUENCE.length - 1),
+      currentScreen: Math.max(
+        0,
+        Math.min(s.currentScreen + value, SEQUENCE.length - 1)
+      ),
     })),
+
   back: () => set(INITIAL_STATE),
   ...INITIAL_STATE,
 }));

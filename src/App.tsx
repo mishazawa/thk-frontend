@@ -2,7 +2,7 @@ import { Suspense } from "react";
 
 import { Done } from "./pages/Done";
 import { Message } from "./pages/Message";
-// import { Mood } from "./pages/Mood";
+
 import { StartPage } from "./pages/Start";
 import { VisualVibe } from "./pages/Style";
 import { ModelProvider } from "./utils/ModelProvider";
@@ -11,6 +11,8 @@ import { TextFilterProvider } from "./utils/TextFilterProvider";
 import { CommunicatorProvider } from "./utils/server";
 import { useStore } from "./utils/Store";
 import { SEQUENCE } from "./constants";
+import { EnglProvider } from "./utils/EnlgProvider";
+import { Mood } from "./pages/Mood";
 
 function App() {
   return (
@@ -18,7 +20,9 @@ function App() {
       <CommunicatorProvider>
         <ModelProvider>
           <TextFilterProvider>
-            <SelectScreen />
+            <EnglProvider>
+              <SelectScreen />
+            </EnglProvider>
           </TextFilterProvider>
         </ModelProvider>
       </CommunicatorProvider>
@@ -33,14 +37,14 @@ function SelectScreen() {
   const screenName = SEQUENCE[currentScreen];
   if (!screenName) return <>Err</>;
   switch (screenName) {
-    case "Start":
-      return <StartPage />;
-    case "VisualVibe":
+    // case "Start":
+    //   return <StartPage />;
+    case "Style":
       return <VisualVibe />;
     case "Message":
       return <Message />;
-    // case "Mood":
-    //   return <Mood />;
+    case "Mood":
+      return <Mood />;
     case "Done":
       return <Done />;
   }
