@@ -28,14 +28,10 @@ function CoordsPicker() {
   const pipeRef = useRef<any>(null);
 
   const [size, setSize] = useState<{ w: number; h: number }>({
-    w: 560,
-    h: 360,
+    w: 128,
+    h: 128,
   });
-
-  const [point, setPoint] = useState<{ x: number; y: number } | null>({
-    x: style[0] * size.w,
-    y: style[1] * size.h,
-  });
+  const [_point, setPoint] = useState<{ x: number; y: number } | null>(null);
 
   const [dragging, setDragging] = useState(false);
 
@@ -46,8 +42,10 @@ function CoordsPicker() {
     if (!el) return;
     const resize = () => {
       const rect = el.getBoundingClientRect();
-      const w = Math.max(280, Math.round(rect.width));
-      const h = Math.max(220, Math.round(rect.width * 0.64));
+      const w = Math.max(128, Math.round(rect.width));
+      const h = Math.max(128, Math.round(rect.width));
+      // const w = 1024;
+      // const h = 1024;
       setSize({ w, h });
       setPoint({
         x: style[0] * w,
@@ -61,6 +59,12 @@ function CoordsPicker() {
   }, []);
 
   const dpr = Math.max(1, Math.floor(window.devicePixelRatio || 1));
+
+  const pointRef = useRef<{ x: number; y: number } | null>(null);
+  const setPointAndUpdate = (p: { x: number; y: number }) => {
+    pointRef.current = p;
+    setPoint(p);
+  };
 
   useEffect(() => {
     let frameId: number;
@@ -77,7 +81,6 @@ function CoordsPicker() {
 
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.scale(dpr, dpr);
-
       ctx.clearRect(0, 0, size.w, size.h);
 
       // axes
@@ -89,20 +92,28 @@ function CoordsPicker() {
       ctx.lineTo(Math.floor(size.w / 2) + 0.5, size.h);
       ctx.stroke();
 
-      if (point) {
+      const p = pointRef.current;
+      if (p) {
         ctx.strokeStyle = "#ffffff";
         ctx.fillStyle = "#ffffff33";
         ctx.beginPath();
-        ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
       }
 
+      // per-frame pipe blit
+      if (pipeRef.current && englRef.current) {
+        // pipeRef.current.update({ u_time: performance.now() * 0.001 }, false); // if needed
+        // englRef.current.blit(pipeRef.current.pipe.get("out").tex);
+      }
+
       frameId = requestAnimationFrame(render);
     };
+
     render();
     return () => cancelAnimationFrame(frameId);
-  }, [size, dpr, point]);
+  }, [size, dpr, radius]);
 
   function toLocal(
     e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
@@ -129,18 +140,17 @@ function CoordsPicker() {
     const nx = px / size.w;
     const ny = py / size.h;
     set("style", [nx, ny] as [number, number]);
-
-    if (pipeRef.current && englRef.current) {
-      pipeRef.current.update({ u_xy: [nx, ny] }, false);
-      englRef.current.blit(pipeRef.current.pipe.get("out").tex);
-    }
+    // if (pipeRef.current && englRef.current) {
+    pipeRef.current.update_params({ u_xy: [nx, ny] }, false);
+    //   englRef.current.blit(pipeRef.current.pipe.get("out").tex);
+    // }
   };
 
   const onDown = (
     e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
   ) => {
     const p = toLocal(e);
-    setPoint(p);
+    setPointAndUpdate(p);
     setDragging(true);
     updateNormalized(p.x, p.y);
   };
@@ -150,13 +160,14 @@ function CoordsPicker() {
   ) => {
     if (!dragging) return;
     const p = toLocal(e);
-    setPoint(p);
+    setPointAndUpdate(p);
     updateNormalized(p.x, p.y);
   };
 
   const onUpOrLeave = () => {
     setDragging(false);
-    if (point) updateNormalized(point.x, point.y);
+    const p = pointRef.current;
+    if (p) updateNormalized(p.x, p.y);
   };
 
   return (
@@ -173,8 +184,6 @@ function CoordsPicker() {
           pipeRef.current = pipe;
         }}
       />
-
-      {/* FOREGROUND */}
       <canvas
         ref={canvasRef}
         width={size.w}

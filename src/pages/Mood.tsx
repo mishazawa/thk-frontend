@@ -29,7 +29,7 @@ export function Mood() {
       <LargeText>
         <Word t="MOOD" />
       </LargeText>
-      <div className="d-flex align-items-end w-100 mood_container">
+      <div className="d-flex align-items-end w-200 mood_container">
         <div className="canvas_MOCK"></div>
         <div className="d-flex flex-grow-1 h-100 align-self-end">
           <ThemeProvider theme={theme}>

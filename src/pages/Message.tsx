@@ -1,5 +1,5 @@
 import { useModel } from "../utils/ModelProvider";
-import { isToxic } from "../utils";
+import { isToxic } from "../utils/index";
 import { useTextFilter } from "../utils/TextFilterProvider";
 import { useLoader, useStore } from "../utils/Store";
 import { Word } from "../dictionary";
@@ -39,7 +39,10 @@ export function Message() {
       <input
         className="input_rounded w-100"
         value={text}
-        onChange={(e) => set("text", e.target.value)}
+        onChange={(e) => {
+          set("text", e.target.value);
+          window.TEMP_TEXT = e.target.value;
+        }}
       ></input>
       <br />
       <CustomButton onClick={submit}>

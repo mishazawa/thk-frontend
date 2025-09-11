@@ -1,9 +1,9 @@
 export const START_SCREEN = 0;
 export const SEQUENCE = [
   "Start",
-  "VisualVibe",
   "Message",
-  "Mood",
+  "VisualVibe",
+  // "Mood",
   "Done",
 ] as const;
 

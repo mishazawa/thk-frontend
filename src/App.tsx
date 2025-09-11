@@ -2,7 +2,7 @@ import { Suspense } from "react";
 
 import { Done } from "./pages/Done";
 import { Message } from "./pages/Message";
-import { Mood } from "./pages/Mood";
+// import { Mood } from "./pages/Mood";
 import { StartPage } from "./pages/Start";
 import { VisualVibe } from "./pages/Style";
 import { ModelProvider } from "./utils/ModelProvider";
@@ -39,8 +39,8 @@ function SelectScreen() {
       return <VisualVibe />;
     case "Message":
       return <Message />;
-    case "Mood":
-      return <Mood />;
+    // case "Mood":
+    //   return <Mood />;
     case "Done":
       return <Done />;
   }
