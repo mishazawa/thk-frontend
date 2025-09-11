@@ -15,15 +15,14 @@
 
 // set page background
 body {
-  background-color: #1D2B29;
-  color: #F4EFE7;
+  background-color: #1d2b29;
+  color: #f4efe7;
 }
-
 
 .btn {
   border-color: $gray-300;
   letter-spacing: 0.2rem;
-  background-color: #1E5246;
+  background-color: #1e5246;
 
   &_rounded {
     border-color: #f4efe700;
@@ -68,6 +67,7 @@ body {
 }
 .rotated-text {
   display: inline-block; /* needed so transform applies nicely */
+  transform-origin: 50% 50%;
   &-CCW {
     transform: rotate(-90deg); /* 90° counterclockwise */
   }
@@ -80,6 +80,9 @@ body {
   background-color: #000000cc;
   width: 100%;
   height: 100%;
+}
+.pre-line {
+  white-space: pre-line;
 }
 
 // override keyboard styles
@@ -109,7 +112,7 @@ body {
     flex-grow: 1;
     height: 100%;
 
-    background-color: #1E5246;
+    background-color: #1e5246;
     color: white;
   }
 }

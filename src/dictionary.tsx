@@ -19,9 +19,12 @@ export const MOOD_WORD_1 = "Exited";
 export const MOOD_WORD_2 = "Calm";
 export const MOOD_WORD_3 = "Active";
 export const MOOD_WORD_4 = "Focused";
+export const SERVER_BUSY = "Currently showing message...";
+export const MANIFEST = `In this fast-paced world, we witness imbalance — nature strained, greed rising, lives unsettled, harmony fading. Yet within us remains a spark of hope, a quiet will to restore balance.
+From once a symbol of harmony through light and reflection, The THK Tower now evolves — an interactive bridge between human and universe. Here, your thoughts and intentions are not small. They merge into a collective message.
+This moment reminds us: change begins within. By sharing what is true, by carrying value in each step, we bring balance once more.
 
-export const MANIFEST =
-  "In this fast-paced world, we witness imbalance — nature strained, greed rising, lives unsettled, harmony fading. Yet within us remains a spark of hope, a quiet will to restore balance. From once a symbol of harmony through light and reflection, The THK Tower now evolves — an interactive bridge between human and universe. Here, your thoughts and intentions are not small. They merge into a collective message. This moment reminds us: change begins within. By sharing what is true, by carrying value in each step, we bring balance once more.  Are you ready to step in?";
+Are you ready to step in?`;
 const DICT = {
   START,
   QUESTION,
@@ -45,8 +48,9 @@ const DICT = {
   MOOD_WORD_4,
   YES,
   NO,
+  SERVER_BUSY,
 } as const;
 
 export function Word<K extends keyof typeof DICT>({ t }: { t: K }) {
-  return <span>{DICT[t]}</span>;
+  return <span className="pre-line">{DICT[t]}</span>;
 }

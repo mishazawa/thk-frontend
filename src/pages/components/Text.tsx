@@ -20,9 +20,9 @@ export function RotatedText({
   return (
     <div className="h-100 d-flex rotated-wrapper">
       <span
-        className={`rotated-text-${cw ? "CW" : "CCW"} ${
-          invisible ? "opacity-0" : ""
-        }`}
+        className={`
+          rotated-text-${cw ? "CW" : "CCW"}
+          ${invisible ? "opacity-0" : ""}`}
       >
         {children}
       </span>
