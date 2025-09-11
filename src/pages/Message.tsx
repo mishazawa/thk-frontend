@@ -3,12 +3,7 @@ import { isToxic } from "../utils/index";
 import { useTextFilter } from "../utils/TextFilterProvider";
 import { useLoader, useStore } from "../utils/Store";
 import { Word } from "../dictionary";
-import {
-  BackStepButton,
-  Controls,
-  CustomButton,
-  NextStepButton,
-} from "./components/Buttons";
+import { Controls } from "./components/Buttons";
 import { LargeText } from "./components/Text";
 import { Page } from "./components/Container";
 import { CustomKeyboard } from "./components/Keyboard";
@@ -18,7 +13,7 @@ export function Message() {
   const model = useModel();
   const filter = useTextFilter();
 
-  const { set, text, next } = useStore();
+  const { text, next } = useStore();
   const { setLoading } = useLoader();
 
   async function validate() {
@@ -46,7 +41,7 @@ export function Message() {
       <div className="input_rounded w-100 text-break text-center justify-content-center d-flex align-items-center">
         {text}
       </div>
-      <Controls />
+      <Controls callback={validate} />
       <CustomKeyboard max={MESSAGE_MAX_LENGTH} />
     </Page>
   );

@@ -72,18 +72,22 @@ export function BackStepButton(props: any) {
 export function NextStepButton(props: any) {
   const { next } = useStore();
 
+  function onClick() {
+    if (!props.callback) return next();
+    props.callback();
+  }
   return (
-    <CustomButton onClick={() => next()} {...props}>
+    <CustomButton onClick={onClick} {...props}>
       <Word t="NEXT" />
     </CustomButton>
   );
 }
 
-export function Controls() {
+export function Controls(props: any) {
   return (
     <div className="w-100 d-flex justify-content-between gap-5">
       <BackStepButton className="flex-fill" />
-      <NextStepButton className="flex-fill btn_hint_blue" />
+      <NextStepButton className="flex-fill btn_hint_blue" {...props} />
     </div>
   );
 }
