@@ -1,10 +1,12 @@
 export const START_SCREEN = 0;
+export const MESSAGE_SCREEN = "Message";
 export const SEQUENCE = [
   "Start",
   "Manifest",
-  "Message",
+  MESSAGE_SCREEN,
   "Style",
   "Mood",
+  "SendStatus",
   "Done",
 ] as const;
 

@@ -3,10 +3,12 @@ export const QUESTION = "What do you love about nature the most?";
 export const MESSAGE = "What do you want to contribute to this life?";
 export const MOOD = "How do you feel?";
 export const DONE = "Done";
+export const YES = "Yes";
+export const NO = "No";
 export const SEND = "Send";
 export const ANOTHER_MESSAGE = "Another message";
 export const SEND_SUCCESS = "Your message has been displayed";
-export const WAITING_FOR_SERVER = "Message is being displayed";
+export const WAITING_FOR_SERVER = "Waiting...";
 export const BACK = "Back";
 export const NEXT = "Next";
 export const STYLE_WORD_1 = "Forest";
@@ -41,6 +43,8 @@ const DICT = {
   MOOD_WORD_2,
   MOOD_WORD_3,
   MOOD_WORD_4,
+  YES,
+  NO,
 } as const;
 
 export function Word<K extends keyof typeof DICT>({ t }: { t: K }) {

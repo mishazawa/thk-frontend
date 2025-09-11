@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { Done } from "./pages/Done";
+import { SendStatus } from "./pages/SendStatus";
 import { Message } from "./pages/Message";
 
 import { StartPage } from "./pages/Start";
@@ -14,6 +14,7 @@ import { SEQUENCE } from "./constants";
 import { EnglProvider } from "./utils/EnlgProvider";
 import { Mood } from "./pages/Mood";
 import { Manifest } from "./pages/Manifest";
+import { ReturnScreen } from "./pages/ReturnScreen";
 
 function App() {
   return (
@@ -48,8 +49,10 @@ function SelectScreen() {
       return <Message />;
     case "Mood":
       return <Mood />;
+    case "SendStatus":
+      return <SendStatus />;
     case "Done":
-      return <Done />;
+      return <ReturnScreen />;
     default:
       return <div>{screenName}</div>;
   }

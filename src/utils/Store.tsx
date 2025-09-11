@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { SEQUENCE, START_SCREEN } from "../constants";
+import { MESSAGE_SCREEN, SEQUENCE, START_SCREEN } from "../constants";
 
 type ServerData = {
   text: string;
@@ -13,7 +13,7 @@ type ScreenData = {
 
 type ScreenSetter = {
   next: (value?: number) => void;
-  back: () => void;
+  back: (readManifest?: boolean) => void;
 };
 
 type ServerDataSetter = {
@@ -34,6 +34,10 @@ const INITIAL_STATE: ServerData & ScreenData = {
   currentScreen: START_SCREEN,
 };
 
+const MESSAGE_AGAIN_STATE = {
+  currentScreen: SEQUENCE.indexOf(MESSAGE_SCREEN),
+};
+
 export const useStore = create<
   ServerData & ServerDataSetter & ScreenData & ScreenSetter
 >((set) => ({
@@ -47,7 +51,10 @@ export const useStore = create<
       ),
     })),
 
-  back: () => set(INITIAL_STATE),
+  back: (readManifest = true) =>
+    readManifest
+      ? set(INITIAL_STATE)
+      : set({ ...INITIAL_STATE, ...MESSAGE_AGAIN_STATE }),
   ...INITIAL_STATE,
 }));
 

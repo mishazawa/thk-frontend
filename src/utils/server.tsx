@@ -88,33 +88,6 @@ async function checkHealth(): Promise<boolean> {
   }
 }
 
-//@ts-expect-error
-async function checkServerReady(
-  url: string,
-  interval = 1000,
-  maxAttempts = 30
-): Promise<boolean> {
-  return new Promise((resolve) => {
-    let attempts = 0;
-    const timer = setInterval(async () => {
-      attempts++;
-      try {
-        const res = await fetch(url, { method: "GET" });
-        if (res.ok) {
-          clearInterval(timer);
-          resolve(true);
-        }
-      } catch (e) {
-        // server not ready yet
-      }
-      if (attempts >= maxAttempts) {
-        clearInterval(timer);
-        resolve(false);
-      }
-    }, interval);
-  });
-}
-
 export function useCheckServerStatus() {
   const [ready, setReady] = useState(false);
 
