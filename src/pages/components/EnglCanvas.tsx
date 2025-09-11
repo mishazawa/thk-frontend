@@ -1,7 +1,11 @@
 import React, { useEffect, useRef } from "react";
-
+declare global {
+  interface Window {
+    TEMP_TEXT?: string;
+  }
+}
 type Props = {
-  mountRef?: React.RefObject<HTMLDivElement>;
+  mountRef?: React.RefObject<HTMLDivElement | null>;
   style?: React.CSSProperties;
   onReady?: (engl: any, pipe: any) => void;
 };
@@ -22,7 +26,9 @@ export function EnglCanvas({ mountRef, style, onReady }: Props) {
 
       if (!container.style.position) container.style.position = "relative";
 
+//@ts-expect-error
       const mod = await import("../../engl.js");
+//@ts-expect-error
       const pipes = await import("../../pipes.js");
 
       const e = mod.engl_init(1024, 1024);
@@ -60,7 +66,9 @@ export function EnglCanvas({ mountRef, style, onReady }: Props) {
 
       const pipe = pipes.Style(e, { width: e.canvas.width, height: e.canvas.height, u_xy: [0.5, 0.5] });
       pipeRef.current = pipe;
-      pipe.set_text("HELLO WORLD");
+//#@ts-expect-error
+      pipe.set_text(window.TEMP_TEXT || "NO TEXT");
+
 
       // first blit (optional)
       // e.blit(pipe.pipe.get("out").tex);

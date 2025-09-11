@@ -65,7 +65,7 @@ async function POST(data: any) {
   });
   return await res.json();
 }
-
+//@ts-expect-error
 async function checkServerReady(
   url: string,
   interval = 1000,

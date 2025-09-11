@@ -32,7 +32,10 @@ export function Message() {
       <input
         className="input_rounded w-100"
         value={text}
-        onChange={(e) => set("text", e.target.value)}
+        onChange={(e) => {
+          set("text", e.target.value);
+          window.TEMP_TEXT = e.target.value;
+        }}
       ></input>
       <br />
       <CustomButton onClick={submit}>

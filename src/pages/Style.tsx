@@ -25,7 +25,7 @@ function CoordsPicker() {
   const englRef = useRef<any>(null);
   const pipeRef = useRef<any>(null);
 
-  const [size, setSize] = useState<{ w: number; h: number }>({ w: 560, h: 360 });
+  const [size, setSize] = useState<{ w: number; h: number }>({ w: 128, h: 128 });
   const [_point, setPoint] = useState<{ x: number; y: number } | null>(null);
   const { set } = useStore();
   const [dragging, setDragging] = useState(false);
@@ -37,8 +37,8 @@ function CoordsPicker() {
     if (!el) return;
     const resize = () => {
       const rect = el.getBoundingClientRect();
-      const w = Math.max(280, Math.round(rect.width));
-      const h = Math.max(220, Math.round(rect.width));
+      const w = Math.max(128, Math.round(rect.width));
+      const h = Math.max(128, Math.round(rect.width));
       // const w = 1024;
       // const h = 1024;
       setSize({ w, h });
