@@ -7,7 +7,8 @@ export function engl_init(width, height) {
   canvas.width = width;
   canvas.height = height;
   // document.body.appendChild(canvas);
-  // canvas.style.border = '1px solid black';
+  canvas.style.border = '1px solid #fffff564';
+  canvas.style.borderRadius = '1em';
 
   const gl = canvas.getContext("webgl2");
   // const ext = gl.getExtension('EXT_color_buffer_float');

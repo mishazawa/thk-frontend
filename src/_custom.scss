@@ -10,15 +10,23 @@
   margin: 0 auto;
   text-align: center;
   font-family: "SuisseIntl";
+  font-size: 1.5rem;
 }
+
+// set page background
+body {
+  background-color: #1D2B29;
+  color: #F4EFE7;
+}
+
 
 .btn {
   border-color: $gray-300;
   letter-spacing: 0.2rem;
+  background-color: #1E5246;
 
   &_rounded {
-    background-color: $gray-800;
-    border-color: $gray-300;
+    border-color: #f4efe700;
     border-radius: 1rem;
   }
 
@@ -27,16 +35,17 @@
   }
 
   &_hint_blue {
-    border-color: $blue-300;
+    border-color: #f4efe700;
   }
   &_hint_green {
-    border-color: $green-300;
+    border-color: #f4efe700;
   }
 }
 
 .mfs {
   &_1 {
-    font-size: 1rem;
+    font-size: 3rem;
+    text-align: center !important;
   }
 }
 
@@ -77,7 +86,7 @@
 
 .simple-keyboard.hg-theme-default.myTheme {
   touch-action: manipulation;
-  border-radius: 10px;
+  border-radius: 0px;
   background-color: var(--bs-body-bg);
 
   margin: -3rem;
@@ -100,7 +109,7 @@
     flex-grow: 1;
     height: 100%;
 
-    background-color: #333333;
+    background-color: #1E5246;
     color: white;
   }
 }

@@ -21,7 +21,7 @@ export const MOOD_WORD_3 = "Active";
 export const MOOD_WORD_4 = "Focused";
 
 export const MANIFEST =
-  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+  "In this fast-paced world, we witness imbalance — nature strained, greed rising, lives unsettled, harmony fading. Yet within us remains a spark of hope, a quiet will to restore balance. From once a symbol of harmony through light and reflection, The THK Tower now evolves — an interactive bridge between human and universe. Here, your thoughts and intentions are not small. They merge into a collective message. This moment reminds us: change begins within. By sharing what is true, by carrying value in each step, we bring balance once more.  Are you ready to step in?";
 const DICT = {
   START,
   QUESTION,
