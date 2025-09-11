@@ -12,14 +12,16 @@ export function ReturnScreen() {
       <LargeText>
         <Word t="ANOTHER_MESSAGE" />
       </LargeText>
-      <div className="d-flex flex-grow-1 flex-column w-50 justify-content-around">
-        <CustomButton onClick={() => back(false)} className="btn_hint_blue">
-          <Word t="YES" />
-        </CustomButton>
+      <div className="d-flex flex-grow-1 w-100 justify-content-center align-items-center">
+        <div className="d-flex flex-column gap-5">
+          <CustomButton onClick={() => back(false)} className="btn_hint_blue">
+            <Word t="YES" />
+          </CustomButton>
 
-        <CustomButton onClick={() => window.location.reload()}>
-          <Word t="NO" />
-        </CustomButton>
+          <CustomButton onClick={() => window.location.reload()}>
+            <Word t="NO" />
+          </CustomButton>
+        </div>
       </div>
     </Page>
   );

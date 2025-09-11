@@ -1,11 +1,14 @@
 import { Word } from "../dictionary";
-import { useCommunicator } from "../utils/server";
+import { useCheckServerStatus, useCommunicator } from "../utils/server";
 import { useStore } from "../utils/Store";
 import { CustomButton } from "./components/Buttons";
+import { LargeText } from "./components/Text";
 
 export function StartPage() {
+  const isReady = useCheckServerStatus();
   const { sendStart } = useCommunicator();
   const { next } = useStore();
+
   function proceed() {
     sendStart()
       .then(() => next())
@@ -14,9 +17,15 @@ export function StartPage() {
   return (
     <>
       <div className="container-fluid d-flex flex-grow-1 align-items-center justify-content-center">
-        <CustomButton onClick={proceed} className="btn_hint_blue">
-          <Word t="START" />
-        </CustomButton>
+        {isReady ? (
+          <CustomButton onClick={proceed} className="btn_hint_blue">
+            <Word t="START" />
+          </CustomButton>
+        ) : (
+          <LargeText>
+            <Word t="SERVER_BUSY" />
+          </LargeText>
+        )}
       </div>
     </>
   );
