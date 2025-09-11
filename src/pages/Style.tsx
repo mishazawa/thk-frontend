@@ -1,6 +1,6 @@
 import { Word } from "../dictionary";
 import { Controls } from "./components/Buttons";
-import { LargeText } from "./components/Text";
+import { LargeText, SpaceBetween } from "./components/Text";
 import { Page } from "./components/Container";
 import { ShaderCanvas } from "./components/ShaderCanvas";
 import { useEngl } from "../utils/EnlgProvider";
@@ -23,7 +23,15 @@ export function VisualVibe() {
         <Word t="QUESTION" />
       </LargeText>
       <>
+        <SpaceBetween>
+          <Word t="STYLE_WORD_1" />
+          <Word t="STYLE_WORD_3" />
+        </SpaceBetween>
         <ShaderCanvas updateFn={update} value={style} />
+        <SpaceBetween>
+          <Word t="STYLE_WORD_4" />
+          <Word t="STYLE_WORD_2" />
+        </SpaceBetween>
       </>
       <Controls />
     </Page>

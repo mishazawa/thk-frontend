@@ -2,7 +2,7 @@ import { Word } from "../dictionary";
 import { useStore } from "../utils/Store";
 import { Controls } from "./components/Buttons";
 import { Page } from "./components/Container";
-import { LargeText } from "./components/Text";
+import { LargeText, RotatedText } from "./components/Text";
 
 import { ShaderCanvas } from "./components/ShaderCanvas";
 import { useEngl } from "../utils/EnlgProvider";
@@ -24,9 +24,21 @@ export function Mood() {
       <LargeText>
         <Word t="MOOD" />
       </LargeText>
-      <>
+      <div className="w-100 text-center">
+        <Word t="MOOD_WORD_1" />
+      </div>
+      <div className="d-flex flex-row w-100 align-items-center">
+        <RotatedText>
+          <Word t="MOOD_WORD_2" />
+        </RotatedText>
         <ShaderCanvas updateFn={update} value={dynamics} />
-      </>
+        <RotatedText cw>
+          <Word t="MOOD_WORD_3" />
+        </RotatedText>
+      </div>
+      <div className="w-100 text-center">
+        <Word t="MOOD_WORD_4" />
+      </div>
       <Controls />
     </Page>
   );

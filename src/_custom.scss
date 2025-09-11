@@ -48,6 +48,16 @@
   }
 }
 
+.rotated-text {
+  display: inline-block; /* needed so transform applies nicely */
+  &-CCW {
+    transform: rotate(-90deg); /* 90° counterclockwise */
+  }
+  &-CW {
+    transform: rotate(90deg); /* 90° clockwise */
+  }
+}
+
 .full-black {
   background-color: #000000cc;
   width: 100%;
