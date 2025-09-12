@@ -43,7 +43,7 @@ export function EnglCanvas({ mountRef, style, onReady }: Props) {
       container.appendChild(e.canvas);
     }
 
-    pipe.set_text(window.TEMP_TEXT || "NO TEXT");
+    pipe.set_text(window.TEMP_TEXT || "THK");
 
     onReady?.(e, pipe);
 

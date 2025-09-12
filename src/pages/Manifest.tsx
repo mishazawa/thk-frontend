@@ -1,5 +1,5 @@
 import { Word } from "../dictionary";
-import { NextStepButton } from "./components/Buttons";
+import { LetsgoButton } from "./components/Buttons";
 import { Page } from "./components/Container";
 import { LargeText } from "./components/Text";
 
@@ -8,11 +8,11 @@ export function Manifest() {
     <>
       <Page>
         <LargeText>
-          <Word t="MESSAGE" />
+          <Word t="MESSAGE1" />
         </LargeText>
         <Word t="MANIFEST" />
 
-        <NextStepButton className="btn_hint_blue" />
+        <LetsgoButton className="btn_hint_blue" />
       </Page>
     </>
   );

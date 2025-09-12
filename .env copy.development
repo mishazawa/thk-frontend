@@ -1,0 +1,2 @@
+VITE_SERVER=http://localhost:6969/
+VITE_SKIP_TF_MODEL=1

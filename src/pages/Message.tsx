@@ -10,6 +10,8 @@ import { CustomKeyboard } from "./components/Keyboard";
 import { MESSAGE_MAX_LENGTH } from "../constants";
 import { useState } from "react";
 
+
+
 export function Message() {
   const model = useModel();
   const filter = useTextFilter();
@@ -38,10 +40,24 @@ export function Message() {
     }
   }
 
+  const QUESTION_KEYS = [
+    "QUESTION_1",
+    "QUESTION_2",
+    "QUESTION_3",
+    "QUESTION_4",
+    "QUESTION_5",
+  ] as const;
+
+  type QuestionKey = typeof QUESTION_KEYS[number];
+
+  const [randomQuestionKey] = useState<QuestionKey>(
+    () => QUESTION_KEYS[Math.floor(Math.random() * QUESTION_KEYS.length)]
+  );
+
   return (
     <Page>
       <LargeText>
-        <Word t="MESSAGE" />
+        <Word t={randomQuestionKey} />
       </LargeText>
       <div className="input_rounded w-100 text-break text-center justify-content-center d-flex align-items-center">
         {text}

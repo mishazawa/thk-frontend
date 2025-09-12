@@ -83,6 +83,20 @@ export function NextStepButton(props: any) {
   );
 }
 
+export function LetsgoButton(props: any) {
+  const { next } = useStore();
+
+  function onClick() {
+    if (!props.callback) return next();
+    props.callback();
+  }
+  return (
+    <CustomButton onClick={onClick} {...props}>
+      <Word t="LETSGO" />
+    </CustomButton>
+  );
+}
+
 export function Controls(props: any) {
   return (
     <div className="w-100 d-flex justify-content-between gap-5">

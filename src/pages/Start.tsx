@@ -2,6 +2,7 @@ import { Word } from "../dictionary";
 import { useCheckServerStatus, useCommunicator } from "../utils/server";
 import { useStore } from "../utils/Store";
 import { CustomButton } from "./components/Buttons";
+import { Page } from "./components/Container";
 import { LargeText } from "./components/Text";
 
 export function StartPage() {
@@ -16,6 +17,10 @@ export function StartPage() {
   }
   return (
     <>
+      <Page>
+      <LargeText>
+        <Word t="MESSAGE_START" />
+      </LargeText>
       <div className="container-fluid d-flex flex-grow-1 align-items-center justify-content-center">
         {isReady ? (
           <CustomButton onClick={proceed} className="btn_hint_blue">
@@ -27,6 +32,7 @@ export function StartPage() {
           </LargeText>
         )}
       </div>
+      </Page>
     </>
   );
 }

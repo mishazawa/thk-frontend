@@ -78,12 +78,21 @@ async function POST(data: any) {
 }
 
 async function checkHealth(): Promise<boolean> {
+  const address = `${import.meta.env.VITE_SERVER}health`;
+  const res = await fetch(address, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "ngrok-skip-browser-warning": "69420"
+    },
+    mode: "cors",
+  });
+  // console.log("ADDRESS:", address);
   try {
-    const res = await fetch(`${import.meta.env.VITE_SERVER}health`);
-    if (!res.ok) return false;
-    const json = await res.json();
-    return json.status === "ready";
-  } catch {
+    const data = await res.json();
+    return data.status === "ready";
+  } catch (e) {
+    console.error("JSON parse failed:", e);
     return false;
   }
 }
@@ -96,6 +105,7 @@ export function useCheckServerStatus() {
     const poll = async () => {
       const ok = await checkHealth();
       setReady(ok);
+      console.log("Server status:", ok ? "ready" : "not ready");
       timer = setTimeout(poll, POLLING_TIME);
     };
     poll();
