@@ -15,11 +15,11 @@ export function ReturnScreen() {
       <div className="d-flex flex-grow-1 w-100 justify-content-center align-items-center">
         <div className="d-flex flex-column gap-5">
           <CustomButton onClick={() => back(false)} className="btn_hint_blue">
-            <Word t="YES" />
+            <Word t="YES_1" />
           </CustomButton>
 
           <CustomButton onClick={() => window.location.reload()}>
-            <Word t="NO" />
+            <Word t="NO_1" />
           </CustomButton>
         </div>
       </div>

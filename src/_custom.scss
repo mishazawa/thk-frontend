@@ -68,9 +68,9 @@ body {
 }
 .rotated-text {
   display: inline-block; /* needed so transform applies nicely */
-  transform-origin: 50% 50%;
   &-CCW {
-    transform: rotate(-90deg); /* 90° counterclockwise */
+    transform: rotate(-90deg) translate(0%, -50%); /* reset translate */ /* 90° counterclockwise */
+
   }
   &-CW {
     transform: rotate(90deg); /* 90° clockwise */
@@ -90,7 +90,7 @@ body {
 
 .simple-keyboard.hg-theme-default.myTheme {
   touch-action: manipulation;
-  border-radius: 0px;
+  // border-radius: 0px;
   background-color: var(--bs-body-bg);
 
   margin: -3rem;
@@ -112,6 +112,8 @@ body {
   .hg-button {
     flex-grow: 1;
     height: 100%;
+    box-shadow: none !important;
+    border-bottom: none !important;
 
     background-color: #1e5246;
     color: white;

@@ -11,6 +11,10 @@ export function CustomKeyboard({ max }: { max: number }) {
     set("text", value);
     window.TEMP_TEXT = value;
   }
+  let display = {
+    "{bksp}": "⌫",
+    "{space}": "  "
+  }
 
   return (
     <KKK
@@ -18,6 +22,7 @@ export function CustomKeyboard({ max }: { max: number }) {
       maxLength={max}
       theme={"hg-theme-default hg-layout-default myTheme"}
       layout={{ default: KEYBOARD_LAYOUT }}
+      display={display}
       autoUseTouchEvents
     />
   );

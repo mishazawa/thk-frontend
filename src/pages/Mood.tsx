@@ -14,7 +14,7 @@ export function Mood() {
   function update(nx: number, ny: number) {
     set("dynamics", [nx, ny] as [number, number]);
     // if (pipeRef.current && englRef.current) {
-    pipe.update_params({ u_zw: [nx, ny] }, false);
+    pipe.update_params({ u_zw: [nx, 1.0-ny] }, false);
     //   englRef.current.blit(pipeRef.current.pipe.get("out").tex);
     // }
   }

@@ -1,5 +1,5 @@
 export const START = "Start";
-export const QUESTION = "Which part of nature draws you most?";
+export const QUESTION = "Which part of nature is most present for you?";
 export const MESSAGE_START = "THK Tower Interactive";
 export const MESSAGE1 = "About THK Tower";
 export const MESSAGE = "What do you want to contribute to this life?";
@@ -7,8 +7,10 @@ export const MOOD = "How do you feel right now?";
 export const DONE = "Done";
 export const YES = "Yes";
 export const NO = "No";
+export const YES_1 = "Yes!";
+export const NO_1 = "I am done";
 export const SEND = "Send";
-export const ANOTHER_MESSAGE = "Another message";
+export const ANOTHER_MESSAGE = "Would you like to send another message?";
 export const SEND_SUCCESS = "Your message is being displayed";
 export const WAITING_FOR_SERVER = "After it appears on the THK Tower it will be included in the tapestry of thoughts from different people";
 export const BACK = "Back";
@@ -18,10 +20,10 @@ export const STYLE_WORD_1 = "Forest";
 export const STYLE_WORD_2 = "Dune";
 export const STYLE_WORD_3 = "Ocean";
 export const STYLE_WORD_4 = "Bloom";
-export const MOOD_WORD_1 = "Intense";
+export const MOOD_WORD_1 = "Excited";
 export const MOOD_WORD_2 = "Calm";
-export const MOOD_WORD_3 = "Active";
-export const MOOD_WORD_4 = "Focused";
+export const MOOD_WORD_3 = "Intense";
+export const MOOD_WORD_4 = "Indifferent";
 export const SERVER_BUSY = "Currently showing message...";
 export const MANIFEST = `In this fast-paced world, we witness imbalance — nature strained, greed rising, lives unsettled, harmony fading. Yet within us remains a spark of hope, a quiet will to restore balance.
 From once a symbol of harmony through light and reflection, The THK Tower now evolves — an interactive bridge between human and universe. Here, your thoughts and intentions are not small. They merge into a collective message.
@@ -32,7 +34,7 @@ Are you ready to step in?`;
 export const QUESTION_1 ="What keeps your hope alive?";
 export const QUESTION_2 = "What does your heart tell you now?";
 export const QUESTION_3 = "What do you feel about this world? ";
-export const QUESTION_4 = "What do you want to tell to someone you care?";
+export const QUESTION_4 = "What do you want to tell to someone you care about?";
 export const QUESTION_5 = "What are you grateful for?";
 
 export const PROFANITY_DETECTED = "Profanity is banned.";
@@ -62,6 +64,8 @@ const DICT = {
   MOOD_WORD_4,
   YES,
   NO,
+  YES_1,
+  NO_1,
   SERVER_BUSY,
   PROFANITY_DETECTED,
   QUESTION_1,

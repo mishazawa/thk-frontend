@@ -19,6 +19,7 @@ export function EnglProvider({ children }: { children: ReactNode }) {
         width: e.canvas.width,
         height: e.canvas.height,
         u_xy: [0.5, 0.5],
+        u_zw: [0.5, 0.5],
       }),
     [e]
   );

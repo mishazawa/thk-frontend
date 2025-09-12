@@ -50,6 +50,7 @@ precision highp float;
 in vec2 v_uv;
 out vec4 outColor;
 uniform vec2 u_xy;
+uniform vec2 u_zw;
 uniform float u_frame;
 uniform sampler2D u_src;
 uniform sampler2D u_feedend;
@@ -72,15 +73,23 @@ uniform float u_d_yoff;
 uniform float u_f_noise;
 uniform float u_f_blur;
 uniform float u_f_fade;
+
+uniform float u_noise_scale;
+
 ${simplex3d}
+
 void main() {
 
+    vec2 noise_uv = (v_uv*2.0-1.0) * u_noise_scale * 10.0 * (1.0 - pow((1.0-u_zw.y), 0.25));
+    float noise_speed = 0.2;
+    float time = mod(float(u_frame)/30.0, 10000.0);
+
     // Displace
-    vec4 feedblur0_col = texture(u_feedblur0, v_uv);
-    vec3 disp_npos = vec3((v_uv * 2.0 - 1.0)*u_d_uv, u_frame * 0.01);
+    vec4 feedblur0_col = texture(u_feedblur, v_uv);
+    vec3 disp_npos = vec3(noise_uv*u_d_uv, time * noise_speed);
     disp_npos.z += u_d_feed * feedblur0_col.r * 1.0;
     vec2 disp = vec2(snoise(disp_npos), snoise(disp_npos + vec3(5.2,1.3,7.1)));
-    vec2 disp_uv = ((v_uv*2.0-1.0)/(1.0+u_d_scale)*0.5+0.5) + disp * u_d_strength * 0.1 * 0.25 + vec2(0.0, u_d_yoff*-0.1);
+    vec2 disp_uv = ((v_uv*2.0-1.0)/(1.0+u_d_scale)*0.5+0.5) + disp * u_d_strength * 0.1 * u_zw.x + vec2(0.0, u_d_yoff*-0.1);
     disp_uv = clamp(disp_uv, 0.0, 1.0);
 
     // Grow
@@ -88,8 +97,8 @@ void main() {
     vec4 grow_back = feedback_col * u_g_keep;
     vec4 grow_edge = texture(u_feededge, disp_uv);
     grow_edge *= u_g_edge*2.0;
-    vec2 edge_npos = vec2(disp_uv * 2.0 - 1.0) * 1.0;
-    float edge_mask = snoise(vec3(edge_npos, u_frame * 0.01)) * 0.5 + 0.5;
+    vec2 edge_npos = noise_uv * 1.0;
+    float edge_mask = snoise(vec3(edge_npos, time * noise_speed)) * 0.5 + 0.5;
     edge_mask = mix(1.0-u_g_noise, 1.0, edge_mask);
     grow_edge *= edge_mask;
     
@@ -99,10 +108,12 @@ void main() {
     // Fade
     vec4 feedblur_col0 = texture(u_feedblur0, v_uv);
     vec4 feedend_col0 = texture(u_feedend, v_uv);
-    vec2 fade_npos = vec2(disp_uv * 2.0 - 1.0) * 1.0;
-    float fade_mask = snoise(vec3(fade_npos, u_frame * 0.02)) * 0.5 + 0.5;
+    
+    
+    vec3 fade_npos = vec3(noise_uv, time * noise_speed);
+    float fade_mask = snoise(fade_npos) * 0.5 + 0.5;
+    vec4 fade_col = feedblur_col0;
     fade_mask = mix(1.0-u_f_noise, 1.0, fade_mask);
-    vec4 fade_col = mix(feedblur_col0, feedend_col0, 0.0);
     fade_col *= fade_mask * u_f_fade;
 
     // Final mix
@@ -110,6 +121,7 @@ void main() {
     vec4 mixed = max(fade_col, grow_out);
     vec4 src_col = texture(u_src, v_uv);
     mixed = max(mixed, src_col);
+    mixed = clamp(mixed, 0.0, 1.0);
     outColor = mixed;
 
 } `,    width: params.width, height: params.height, format: "rgba8", filter: "linear" }));
@@ -134,15 +146,15 @@ in vec2 v_uv;
 out vec4 outColor;
 uniform vec2 u_res;
 uniform sampler2D u_feedend;
-uniform float u_feed_blur0;
+uniform float u_f_blur;
 ` + fast_blur + `
 void main() {
-    vec4 blurred = fast_blur(u_feedend, v_uv, u_res, 16, 8, u_feed_blur0);
+    vec4 blurred = fast_blur(u_feedend, v_uv, u_res, 16, 9, u_f_blur*6.0);
     outColor = vec4(blurred);
 }
  `,    width: params.width, height: params.height, format: "rgba8", filter: "linear" }));
 
-    pipe.set("feedblur", engl.make_shader({
+     pipe.set("feedblur", engl.make_shader({
         fragment_shader: `#version 300 es
 precision highp float;
 in vec2 v_uv;
@@ -153,7 +165,7 @@ uniform float u_edge_blur;
 uniform float u_g_blur;
 ` + fast_blur + `
 void main() {
-    vec4 blurred = fast_blur(u_feedend, v_uv, u_res, 16, 8, u_edge_blur);
+    vec4 blurred = fast_blur(u_feedend, v_uv, u_res, 16, 16, u_g_blur*16.0);
     outColor = vec4(blurred);
 }
  `,    width: params.width, height: params.height, format: "rgba8", filter: "linear" }));
@@ -207,6 +219,8 @@ void main() {
 }
  `,    width: params.width, height: params.height, format: "rgba8", filter: "linear" }));
 
+
+
     pipe.set("out", engl.make_shader({
         fragment_shader: `#version 300 es
 precision highp float;
@@ -235,7 +249,7 @@ void main() {
     col = max(col*0.8, src);
     vec3 color1 = palette_map(col,
       vec3(0.02, 0.1, 0.1),
-      vec3(0.11, 0.53, 0.0),
+      vec3(0.11, 0.42, 0.36),
       vec3(0.87, 0.9, 0.25),
       vec3(0.92, 0.94, 0.6)
       );
@@ -260,6 +274,7 @@ void main() {
     vec3 mix_a = mix(color1, color2, u_xy.x);
     vec3 mix_b = mix(color3, color4, u_xy.x);
     vec3 final_color = mix(mix_a, mix_b, u_xy.y);
+    // final_color = pow(final_color, vec3(0.4545)); // gamma 2.2
     outColor = vec4(final_color, 1.0);
 } `,    width: params.width, height: params.height, format: "rgba8", filter: "linear" }));
 
@@ -335,29 +350,13 @@ void main() {
       return out;
     }
 
-    // const params_defaults = {
-    //     u_edgeStrength: 1.0,
-    //     u_edgeThreshold: 0.2,
-    //     u_edge_blur: 4.0,
-    //     u_g_blur: 0.0,
-    //     u_g_edge: 0.5,
-    //     u_g_keep: 0.8,
-    //     u_g_noise: 0.2,
-    //     u_d_uv: 1.0,
-    //     u_d_feed: 0.0,
-    //     u_d_strength: 0.005,
-    //     u_d_scale: 0.0,
-    //     u_d_yoff: 0.02,
-    //     u_f_noise: 0.0,
-    //     u_f_blur: 0.0,
-    //     u_f_fade: 0.5
-    //   };
 
     const params_defaults = {
-        u_edgeStrength: 1.0,
+        u_edgeStrength: 0.5,
         u_edgeThreshold: 0.0,
         u_edge_blur:8.0,
         u_feed_blur0: 4.0,
+        u_noise_scale: 1.0
       };
 
     let frame = 0;
@@ -367,7 +366,7 @@ void main() {
 
         let cross1 = mix_params(feedparams00, feedparams01, params.u_xy[0]);
         let cross2 = mix_params(feedparams10, feedparams11, params.u_xy[0]);
-        let final_params = mix_params(cross1, cross2, params.u_xy[1]);
+        let final_params = mix_params(cross1, cross2, params.u_xy[0]);
 
         const uniforms = {
           u_init: init,
@@ -404,7 +403,7 @@ void main() {
         update_params: (new_params = {}) => {
             for (const [key, value] of Object.entries(new_params)) {
               params[key] = value;
-              // console.log(`Updated param ${key} to`, value);
+              console.log(`Updated param ${key} to`, value);
             }
         },
         set_text: set_text,

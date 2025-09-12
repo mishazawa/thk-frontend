@@ -19,6 +19,7 @@ export function useServerCommunication() {
   async function sendData() {
     try {
       setLoading(true);
+      data.dynamics = [data.dynamics[0], 1.0 - data.dynamics[1]];
       const { status } = await POST(data);
       return Promise.resolve(status);
     } catch (e) {
