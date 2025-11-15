@@ -11,7 +11,7 @@ export const SEQUENCE = [
 ] as const;
 
 export const CIRCLE_RADIUS = 40;
-export const POLLING_TIME = 5000;
+
 export const KEYBOARD_LAYOUT = [
   // "1 2 3 4 5 6 7 8 9 0",
   "Q W E R T Y U I O P",
@@ -21,3 +21,5 @@ export const KEYBOARD_LAYOUT = [
 ];
 
 export const MESSAGE_MAX_LENGTH = 27;
+
+export const MESSAGE_WRITE_PATH: [string, string] = ["v1", "current"];
