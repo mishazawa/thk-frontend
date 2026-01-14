@@ -6,22 +6,55 @@ import {
   type ReactNode,
 } from "react";
 import { useLoader, useStore } from "./Store";
-import { POLLING_TIME } from "../constants";
+import { MESSAGE_WRITE_PATH } from "../constants";
+import { initializeApp } from "firebase/app";
+import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
+import { doc, getFirestore, onSnapshot, setDoc } from "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_apiKey,
+  authDomain: import.meta.env.VITE_authDomain,
+  projectId: import.meta.env.VITE_projectId,
+  storageBucket: import.meta.env.VITE_storageBucket,
+  messagingSenderId: import.meta.env.VITE_messagingSenderId,
+  appId: import.meta.env.VITE_appId,
+};
+
+const app = initializeApp(firebaseConfig);
+
+if (import.meta.env.DEV) {
+  //@ts-ignore
+  self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+}
+
+initializeAppCheck(app, {
+  provider: new ReCaptchaV3Provider(import.meta.env.VITE_CAPTCHA_SITE_KEY),
+  isTokenAutoRefreshEnabled: true,
+});
+
+const db = getFirestore(app);
 
 export function useServerCommunication() {
-  const { set: _, currentScreen: _1, back: _2, next: _3, ...data } = useStore();
+  const { text, dynamics, style } = useStore();
   const { setLoading } = useLoader();
 
   async function sendStart() {
-    return Promise.resolve();
+    return Promise.resolve(); // ok.
   }
 
   async function sendData() {
     try {
       setLoading(true);
-      data.dynamics = [data.dynamics[0], 1.0 - data.dynamics[1]];
-      const { status } = await POST(data);
-      return Promise.resolve(status);
+      const currentRef = doc(db, ...MESSAGE_WRITE_PATH);
+      const data = {
+        text,
+        style,
+        dynamics: remapDynamics(dynamics),
+      };
+
+      await setDoc(currentRef, data);
+      console.log("Data sent:", data);
+      return Promise.resolve();
     } catch (e) {
       if (import.meta.env.DEV) {
         console.error(e);
@@ -41,7 +74,7 @@ export function useServerCommunication() {
 
 type CommunicatorContextType = {
   sendStart: () => Promise<void>;
-  sendData: () => Promise<void>;
+  sendData: () => Promise<any>;
 };
 
 const CommunicatorContext = createContext<CommunicatorContextType | undefined>(
@@ -68,50 +101,25 @@ export function useCommunicator() {
   return ctx;
 }
 
-async function POST(data: any) {
-  console.log(data);
-  const res = await fetch(import.meta.env.VITE_SERVER, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-  return await res.json();
-}
-
-async function checkHealth(): Promise<boolean> {
-  const address = `${import.meta.env.VITE_SERVER}health`;
-  const res = await fetch(address, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "ngrok-skip-browser-warning": "69420"
-    },
-    mode: "cors",
-  });
-  // console.log("ADDRESS:", address);
-  try {
-    const data = await res.json();
-    return data.status === "ready";
-  } catch (e) {
-    console.error("JSON parse failed:", e);
-    return false;
-  }
-}
-
 export function useCheckServerStatus() {
   const [ready, setReady] = useState(false);
 
+  // Subscribe to /v1/status
   useEffect(() => {
-    let timer: any;
-    const poll = async () => {
-      const ok = await checkHealth();
-      setReady(ok);
-      console.log("Server status:", ok ? "ready" : "not ready");
-      timer = setTimeout(poll, POLLING_TIME);
-    };
-    poll();
-    return () => clearTimeout(timer);
+    const docRef = doc(db, "v1", "status");
+    const unsubscribe = onSnapshot(docRef, (docSnap) => {
+      if (docSnap.exists()) {
+        setReady(docSnap.data().ready);
+      } else {
+        setReady(false);
+      }
+    });
+    return () => unsubscribe();
   }, []);
 
   return ready;
+}
+
+function remapDynamics(a: [number, number]) {
+  return [a[0], 1.0 - a[1]];
 }
